@@ -310,9 +310,22 @@
     outline: none;
   }
   .notify-form input::placeholder { color: rgba(243,234,221,0.32); }
+  /* Suppress Chrome/Safari autofill yellow/blue/grey box so the field stays transparent on the dark bg. */
+  .notify-form input:-webkit-autofill,
+  .notify-form input:-webkit-autofill:hover,
+  .notify-form input:-webkit-autofill:focus,
+  .notify-form input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-text-fill-color: var(--ink) !important;
+    caret-color: var(--ink) !important;
+    transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s;
+    font-family: inherit !important;
+  }
+  /* Subtle divider between input and button so they read as one unified field. */
   .notify-form button {
     background: transparent;
     border: 0;
+    border-left: 1px solid rgba(243,234,221,0.12);
     color: var(--gold-soft);
     font-family: inherit;
     font-size: 11px;
@@ -320,11 +333,13 @@
     text-transform: uppercase;
     font-weight: 500;
     cursor: pointer;
-    padding: 0 2px 0 14px;
+    padding: 0 2px 0 16px;
+    margin-left: 8px;
     display: inline-flex; align-items: center; gap: 8px;
-    transition: color .25s, transform .35s cubic-bezier(.2,.6,.2,1);
+    transition: color .25s, border-color .35s, transform .35s cubic-bezier(.2,.6,.2,1);
     white-space: nowrap;
   }
+  .notify-form:focus-within button { border-left-color: rgba(201,163,90,0.35); }
   .notify-form button:hover { color: var(--gold); }
   .notify-form button .arrow { transition: transform .35s cubic-bezier(.2,.6,.2,1); }
   .notify-form button:hover .arrow { transform: translateX(3px); }
