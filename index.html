@@ -9,6 +9,12 @@
 <meta property="og:description" content="A home for the cinema being made when AI meets craft." />
 <meta property="og:type" content="website" />
 <meta name="theme-color" content="#0a0707" />
+
+<!-- Favicon — inline SVG of the Dionysia mark, no upload needed -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<link rel="mask-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><path d='M160 30 L290 275 L126 275 L76 183 Z' fill='%23000'/></svg>" color="#c9a35a" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -264,24 +270,79 @@
     animation: fadeUp 1s cubic-bezier(.2,.6,.2,1) 4.9s forwards;
   }
 
-  /* Notify line */
+  /* Notify form */
   .notify {
     margin-top: clamp(28px, 3vw, 40px);
+    width: 100%;
+    max-width: 420px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px;
+    opacity: 0;
+    animation: fadeUp 1s cubic-bezier(.2,.6,.2,1) 5.3s forwards;
+    min-height: 78px; /* prevents layout shift when swapping to thanks */
+  }
+  .notify-label {
+    margin: 0;
     font-size: 11px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--ink-mute);
-    opacity: 0;
-    animation: fadeUp 1s cubic-bezier(.2,.6,.2,1) 5.3s forwards;
+    transition: color .35s;
   }
-  .notify a {
+  .notify.sent .notify-label { color: var(--gold); }
+  .notify-form {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid rgba(243,234,221,0.2);
+    transition: border-color .35s;
+  }
+  .notify-form:focus-within { border-color: var(--gold); }
+  .notify-form.invalid { border-color: rgba(180,40,40,0.65); }
+  .notify-form input {
+    flex: 1; min-width: 0;
+    background: transparent;
+    border: 0;
+    padding: 12px 4px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    outline: none;
+  }
+  .notify-form input::placeholder { color: rgba(243,234,221,0.32); }
+  .notify-form button {
+    background: transparent;
+    border: 0;
     color: var(--gold-soft);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(201,163,90,0.35);
-    padding-bottom: 1px;
-    transition: color .25s, border-color .25s;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0 2px 0 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: color .25s, transform .35s cubic-bezier(.2,.6,.2,1);
+    white-space: nowrap;
   }
-  .notify a:hover { color: var(--gold); border-color: var(--gold); }
+  .notify-form button:hover { color: var(--gold); }
+  .notify-form button .arrow { transition: transform .35s cubic-bezier(.2,.6,.2,1); }
+  .notify-form button:hover .arrow { transform: translateX(3px); }
+  .notify-form button:disabled { opacity: 0.4; cursor: default; }
+  .notify-thanks {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(15px, 1.4vw, 18px);
+    color: var(--gold-soft);
+    text-align: center;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .5s, transform .5s;
+    display: none;
+  }
+  .notify.sent .notify-form { display: none; }
+  .notify.sent .notify-thanks { display: block; opacity: 1; transform: none; }
 
   @keyframes fadeUp {
     0%   { opacity: 0; transform: translateY(8px); }
@@ -341,8 +402,14 @@
     animation: fadeUp 1s cubic-bezier(.2,.6,.2,1) 0.4s forwards;
     text-align: center;
     white-space: nowrap;
+    max-width: calc(100vw - 32px);
   }
   .top-mark .gold { color: var(--gold); opacity: 0.85; }
+  /* Drop the descriptor on narrow screens so it never gets clipped — keep MMXXVI as a quiet date stamp. */
+  @media (max-width: 640px) {
+    .top-mark .top-mark-tail { display: none; }
+    .top-mark { letter-spacing: 0.42em; font-size: 10.5px; }
+  }
 
   /* Reduced motion fallback */
   @media (prefers-reduced-motion: reduce) {
@@ -362,7 +429,7 @@
 </head>
 <body>
 
-<div class="top-mark">MMXXVI &nbsp;<span class="gold">·</span>&nbsp; A home for serious AI cinema</div>
+<div class="top-mark">MMXXVI<span class="top-mark-tail">&nbsp;&nbsp;<span class="gold">·</span>&nbsp;&nbsp;A home for serious AI cinema</span></div>
 
 <div class="stage">
   <div class="bloom"></div>
@@ -391,7 +458,21 @@
 
     <p class="tagline">A home for the cinema being made when AI meets craft. Curated streaming for filmmakers using AI alongside real storytelling, music, and visual imagination.</p>
 
-    <p class="notify">Be the first to know · <a href="mailto:kanishtuteja@gmail.com?subject=Dionysia%20%E2%80%94%20notify%20me">kanishtuteja@gmail.com</a></p>
+    <div class="notify" id="notify">
+      <p class="notify-label">Be the first to know</p>
+      <form class="notify-form" id="notifyForm" novalidate
+            action="https://formsubmit.co/ajax/kanishtuteja@gmail.com" method="POST">
+        <input type="email" id="notifyEmail" name="email" placeholder="you@elsewhere.com" required autocomplete="email" aria-label="Your email address" />
+        <button type="submit">Notify me <span class="arrow" aria-hidden="true">→</span></button>
+        <input type="hidden" name="_subject" value="Dionysia — new subscriber" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="source" value="dionysia.ca" />
+        <!-- Honeypot — bots fill this, humans never see it -->
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true" />
+      </form>
+      <p class="notify-thanks">A seat is held. We'll write before the lights come up.</p>
+    </div>
   </div>
 
   <div class="vignette"></div>
@@ -424,6 +505,62 @@
       s.style.transform = `scale(${sc})`;
       root.appendChild(s);
     }
+  })();
+
+  // Subscribe form — submits via fetch, falls back to mailto if service is unreachable.
+  // Subscribers go to kanishtuteja@gmail.com via formsubmit.co (no signup;
+  // first submission triggers a one-time confirmation email to that address).
+  (function notifyForm() {
+    const wrap = document.getElementById('notify');
+    const form = document.getElementById('notifyForm');
+    const email = document.getElementById('notifyEmail');
+    if (!wrap || !form || !email) return;
+
+    const FALLBACK_TO = 'kanishtuteja@gmail.com';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const value = email.value.trim();
+      // Bot check — honeypot field should always be empty
+      const honey = form.querySelector('input[name="_honey"]');
+      if (honey && honey.value) { return; }
+      if (!/.+@.+\..+/.test(value)) {
+        form.classList.add('invalid');
+        email.focus();
+        return;
+      }
+      form.classList.remove('invalid');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      let delivered = false;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            email: value,
+            _subject: 'Dionysia — new subscriber',
+            source: 'dionysia.ca',
+          }),
+        });
+        delivered = res.ok;
+      } catch (_) { delivered = false; }
+
+      if (!delivered) {
+        // Last-resort fallback — open user's mail client with subscriber address pre-filled
+        const subject = encodeURIComponent('Dionysia — notify me');
+        const body = encodeURIComponent(`Add me to the Dionysia waitlist:\n\n${value}\n`);
+        window.location.href = `mailto:${FALLBACK_TO}?subject=${subject}&body=${body}`;
+      }
+
+      wrap.classList.add('sent');
+    });
+
+    email.addEventListener('input', () => form.classList.remove('invalid'));
   })();
 </script>
 
