@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dionysia — Watch</title>
+<meta name="theme-color" content="#0a0707" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+<!-- Plausible analytics -->
+<script async src="https://plausible.io/js/pa-h4cO0vpBy-TIQBp-gSbyx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+
+<!-- Mux Player web component -->
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
+
+<!-- Films data helper -->
+<script src="films.js" defer></script>
+
+<!-- Watchlist helper -->
+<script src="watchlist.js" defer></script>
+
+<!-- Following (creators) helper -->
+<script src="following.js" defer></script>
+
+<!-- Auth gate -->
+<script src="gate.js"></script>
+
+<!-- Mobile nav -->
+<script src="mobile-nav.js" defer></script>
+
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0707;
+    --bg-soft:#120c0c;
+    --line:#1f1716;
+    --ink:#f3eadd;
+    --ink-mute:#a99c8c;
+    --ink-dim:#6f6457;
+    --gold:#c9a35a;
+    --gold-soft:#e0c386;
+    --gold-deep:#8a6f37;
+    --wine:#6b1220;
+    --wine-glow:#8b1a2b;
+  }
+  html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+  body{
+    background:
+      radial-gradient(ellipse 70% 40% at 50% 12%, rgba(201,163,90,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 30% at 50% 90%, rgba(107,18,32,0.06) 0%, transparent 70%),
+      var(--bg);
+    min-height:100vh;
+    position:relative;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:0.04;z-index:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+    mix-blend-mode:overlay;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ============ TOP NAV ============ */
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.6em 2em;position:relative;z-index:5;
+    border-bottom:1px solid rgba(243,234,221,0.06);
+  }
+  .nav-mark{display:flex;align-items:center;gap:0.7em}
+  .nav-mark svg{width:28px;height:28px}
+  .nav-mark .word{
+    font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:0.28em;color:var(--ink);
+  }
+  .back-link{
+    font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);
+    border-bottom:1px solid rgba(201,163,90,0.0);padding-bottom:2px;
+    transition:border-color 200ms ease,color 200ms ease;
+  }
+  .back-link:hover{color:var(--gold-soft);border-bottom-color:var(--gold-soft)}
+
+  /* ============ STAGE ============ */
+  .stage{max-width:1280px;margin:0 auto;padding:2em 1.6em 5em;position:relative;z-index:1}
+
+  /* ============ LOADING ============ */
+  .loading{
+    min-height:60vh;display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:1.4em;
+  }
+  .spinner{
+    width:28px;height:28px;border:1.5px solid rgba(201,163,90,0.2);
+    border-top-color:var(--gold);border-radius:50%;
+    animation:spin 1.1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--ink-dim);
+  }
+
+  /* ============ PLAYER ============ */
+  .player-wrap{
+    width:100%;max-width:1280px;margin:0 auto;
+    aspect-ratio:16/9;background:#000;border-radius:4px;overflow:hidden;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,163,90,0.08), 0 30px 80px -30px rgba(201,163,90,0.18);
+    position:relative;
+  }
+
+  /* ============ BRAND BUMPER (in-player, Netflix-style) ============ */
+  /* The iframe is transparent and lets mouse events pass through to the
+     mux-player below, so the player's native chrome (play/pause, volume,
+     scrubber, fullscreen) is visible and usable during the opening titles. */
+  .bumper-in-player{
+    position:absolute; inset:0; z-index:5;
+    background:#0a0707;
+    opacity:1; transition:opacity 450ms ease-out;
+  }
+  .bumper-in-player.fade-out{ opacity:0; pointer-events:none; }
+  .bumper-in-player iframe{
+    width:100%; height:100%;
+    border:0; display:block;
+    background:#0a0707;
+  }
+  .bumper-skip{
+    position:absolute; top:14px; right:14px;
+    z-index:6;
+    pointer-events:auto;
+    padding:8px 14px;
+    background:rgba(10,7,7,0.6);
+    color:var(--ink);
+    border:1px solid rgba(243,234,221,0.22);
+    border-radius:2px;
+    font-family:'Inter',sans-serif;
+    font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase; font-weight:500;
+    cursor:pointer;
+    backdrop-filter:blur(6px);
+    opacity:0; transform:translateY(-4px);
+    transition:opacity 350ms ease-out, transform 350ms ease-out, border-color 200ms, color 200ms;
+  }
+  .bumper-skip.show{ opacity:1; transform:none; }
+  .bumper-skip:hover{ border-color:var(--gold); color:var(--gold-soft); }
+  mux-player{
+    width:100%;height:100%;display:block;
+    --controls-backdrop-color:rgba(10,7,7,0.4);
+    --media-accent-color:#c9a35a;
+    --media-primary-color:#f3eadd;
+  }
+
+  /* ============ META ============ */
+  .meta{margin-top:3em;max-width:780px}
+  .eyebrow{
+    font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:0.8em;
+  }
+  .title{
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    font-size:clamp(34px,5vw,56px);line-height:1.05;letter-spacing:-0.005em;
+    color:var(--ink);margin-bottom:0.6em;
+  }
+  .title .em{font-style:italic;color:var(--gold-soft);font-weight:500}
+  .credit-row{
+    font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-mute);
+    letter-spacing:0.06em;margin-bottom:1.6em;
+  }
+  .credit-row .sep{margin:0 0.8em;color:var(--ink-dim)}
+  .synopsis{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+    font-size:18px;line-height:1.7;color:var(--ink-mute);
+    max-width:640px;
+  }
+
+  /* ============ WATCHLIST BUTTON ============ */
+  .wl-btn{
+    display:inline-flex; align-items:center; gap:0.55rem;
+    margin-top:1.8em;
+    padding:0.7rem 1.15rem;
+    font-family:'Inter',sans-serif;
+    font-size:11.5px; letter-spacing:0.18em; text-transform:uppercase; font-weight:500;
+    border-radius:2px;
+    background:rgba(255,255,255,0.02);
+    color:var(--ink);
+    border:1px solid rgba(243,234,221,0.22);
+    cursor:pointer;
+    transition:border-color .25s, color .25s, background .25s, transform .25s;
+  }
+  .wl-btn:hover{ border-color:var(--gold); color:var(--gold-soft); transform:translateY(-1px); }
+  .wl-btn[aria-pressed="true"]{
+    border-color:rgba(201,163,90,0.55);
+    color:var(--gold-soft);
+    background:rgba(201,163,90,0.06);
+  }
+  .wl-btn svg{ flex:0 0 auto; }
+
+  /* Watchlist + Follow sit side by side, wrap on small screens */
+  .action-row{
+    display:flex; align-items:center; gap:10px;
+    flex-wrap:wrap; margin-top:1.8em;
+  }
+  .action-row .wl-btn{ margin-top:0; }
+
+  /* ============ SIGNAL — finishing ritual ============ */
+  .signal{
+    margin-top:4em;max-width:680px;
+    border-top:1px solid rgba(243,234,221,0.06);
+    padding-top:2.6em;
+    transition:border-color 700ms ease;
+  }
+  .signal.signal--risen{ border-top-color:rgba(201,163,90,0.42); }
+  .signal-eyebrow{
+    font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:0.7em;
+  }
+  .signal-title{
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    font-size:clamp(26px,3.4vw,34px);line-height:1.15;color:var(--ink);
+    margin-bottom:0.5em;
+  }
+  .signal-addressed{
+    font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.65;
+    color:var(--ink-mute);margin-bottom:2em;max-width:32em;
+  }
+
+  /* Triangle */
+  .signal-tri-wrap{ display:flex;justify-content:center;margin-bottom:0.4em; }
+  #signal-tri{
+    width:320px;max-width:90vw;height:auto;
+    touch-action:none;user-select:none;-webkit-user-select:none;
+  }
+  #signal-tri .axis-guide{ stroke:rgba(243,234,221,0.13);stroke-width:1;pointer-events:none; }
+  #signal-tri .axis-hit{ stroke:transparent;stroke-width:42;cursor:pointer; }
+  #tri-poly{
+    fill:rgba(201,163,90,0.15);
+    stroke:var(--gold);stroke-width:1.5;stroke-linejoin:round;
+    pointer-events:none;
+    transition:fill 220ms ease;
+  }
+  #signal-tri .handle{
+    fill:var(--gold-soft);stroke:var(--bg);stroke-width:2;
+    cursor:grab;transition:r 130ms ease;
+  }
+  #signal-tri .handle:hover{ r:9; }
+  #signal-tri.dragging .handle{ cursor:grabbing; }
+  #signal-tri .axis-name{
+    font-family:'Inter',sans-serif;font-size:9px;font-weight:500;
+    letter-spacing:0.2em;fill:var(--ink-mute);
+  }
+  #signal-tri .axis-val{
+    font-family:'Cormorant Garamond',serif;font-size:22px;fill:var(--gold-soft);
+  }
+
+  /* One word */
+  .signal-word{ margin:1.2em auto 2em;max-width:340px;text-align:center; }
+  .signal-word label{
+    display:block;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:15px;color:var(--ink-mute);margin-bottom:0.6em;
+  }
+  .signal-word input{
+    width:100%;background:transparent;border:none;
+    border-bottom:1px solid rgba(243,234,221,0.2);
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;font-size:27px;color:var(--ink);
+    padding:0.15em 0;outline:none;
+    transition:border-color 220ms ease;
+  }
+  .signal-word input::placeholder{ color:var(--ink-dim);font-style:italic; }
+  .signal-word input:focus{ border-bottom-color:var(--gold); }
+
+  /* Send */
+  .signal-send{
+    display:block;margin:0 auto;
+    padding:0.85em 2.2em;
+    font-family:'Inter',sans-serif;font-weight:500;
+    font-size:11px;letter-spacing:0.26em;text-transform:uppercase;
+    color:#1a0a0d;
+    background:linear-gradient(180deg,#d8b269,#b58a3f);
+    border:none;border-radius:2px;cursor:pointer;
+    box-shadow:0 1px 0 rgba(255,255,255,0.25) inset, 0 16px 36px -18px rgba(201,163,90,0.6);
+    transition:transform 200ms ease, box-shadow 200ms ease, opacity 200ms;
+  }
+  .signal-send:hover{ transform:translateY(-2px); }
+  .signal-send:disabled{ opacity:0.45;cursor:default;transform:none; }
+  .signal-hint{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12.5px;
+    color:var(--ink-dim);margin-top:1.2em;text-align:center;letter-spacing:0.04em;
+  }
+
+  /* Confirmation */
+  .signal-done{ text-align:center;padding:0.6em 0 0.4em; }
+  .signal-done .done-mark{ margin-bottom:1.1em;display:flex;justify-content:center; }
+  .signal-done .done-mark svg{ width:40px;height:40px;animation:doneIn 700ms cubic-bezier(.2,.7,.25,1); }
+  @keyframes doneIn{ from{opacity:0;transform:scale(0.7)} to{opacity:1;transform:none} }
+  .signal-done h4{
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    font-size:29px;color:var(--ink);margin-bottom:0.5em;
+  }
+  .signal-done p{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:15px;color:var(--ink-mute);line-height:1.65;
+    max-width:28em;margin:0 auto 1.5em;
+  }
+  .signal-done .done-word{ color:var(--gold-soft);font-style:normal; }
+  .signal-redo{
+    background:transparent;border:none;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:10px;
+    letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-dim);
+    transition:color 200ms;
+  }
+  .signal-redo:hover{ color:var(--gold-soft); }
+
+  /* ============ FOOTER LINE ============ */
+  .footer{
+    margin-top:6em;text-align:center;
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;
+    color:var(--ink-dim);letter-spacing:0.04em;
+  }
+
+  /* ============ EMPTY / ERROR STATES ============ */
+  .state{
+    min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;gap:1.4em;padding:2em;
+  }
+  .state .mark{opacity:0.4}
+  .state .mark svg{width:48px;height:48px}
+  .state h2{
+    font-family:'Cormorant Garamond',serif;font-weight:400;font-style:italic;
+    font-size:clamp(28px,4vw,40px);color:var(--ink);max-width:520px;line-height:1.3;
+  }
+  .state p{
+    font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-mute);
+    max-width:420px;line-height:1.6;letter-spacing:0.02em;
+  }
+  .state .cta{
+    margin-top:1em;
+    font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);
+    border:1px solid var(--gold);padding:0.9em 1.6em;border-radius:2px;
+    transition:all 220ms ease;
+  }
+  .state .cta:hover{background:var(--gold);color:var(--bg)}
+
+  @media (max-width:640px){
+    .nav{padding:1.2em 1em}
+    .stage{padding:1em 0.4em 4em}
+    .meta{margin-top:2em;padding:0 1em}
+    .signal{padding:2em 1em 0;margin-top:3em}
+    .player-wrap{border-radius:0;box-shadow:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== TOP NAV ========== -->
+<header class="nav">
+  <a href="discover.html" class="nav-mark">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+      <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+      <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+    </svg>
+    <span class="word">DIONYSIA</span>
+  </a>
+  <a href="discover.html" class="back-link">← Back to discover</a>
+</header>
+
+<!-- ========== STAGE ========== -->
+<main class="stage">
+
+  <!-- Loading state -->
+  <div id="state-loading" class="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading the reel&hellip;</div>
+  </div>
+
+  <!-- Player + meta (shown when film loads) -->
+  <div id="state-player" style="display:none">
+    <div class="player-wrap">
+      <mux-player
+        id="player"
+        stream-type="on-demand"
+        accent-color="#c9a35a"
+        primary-color="#f3eadd"
+        secondary-color="#0a0707"
+        playsinline
+      ></mux-player>
+
+      <!-- Dionysia opening titles — Netflix-style, plays inside the frame -->
+      <div id="bumper-overlay" class="bumper-in-player" aria-hidden="false">
+        <iframe id="bumper-frame" title="Dionysia opening titles" allow="autoplay"></iframe>
+        <button id="bumper-skip" class="bumper-skip" type="button" aria-label="Skip opening titles">Skip Intro</button>
+      </div>
+    </div>
+
+    <section class="meta">
+      <div class="eyebrow" id="eyebrow">Now Playing</div>
+      <h1 class="title" id="title"></h1>
+      <div class="credit-row">
+        <span id="director"></span>
+        <span class="sep">·</span>
+        <span id="runtime"></span>
+        <span class="sep">·</span>
+        <span id="year"></span>
+      </div>
+      <p class="synopsis" id="synopsis"></p>
+
+      <!-- Actions: watchlist toggle + follow this creator -->
+      <div class="action-row">
+        <button id="wl-btn" type="button" class="wl-btn" aria-pressed="false" aria-label="Add to watchlist">
+          <svg id="wl-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span id="wl-label">Add to Watchlist</span>
+        </button>
+        <button id="follow-btn" type="button" class="wl-btn" aria-pressed="false" aria-label="Follow this creator">
+          <svg id="follow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          <span id="follow-label">Follow</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Signal — finishing ritual -->
+    <section class="signal" id="signal">
+      <p class="signal-eyebrow" id="signal-eyebrow">Your Signal</p>
+      <h3 class="signal-title" id="signal-title">Leave your signal.</h3>
+      <p class="signal-addressed" id="signal-addressed">Tell the filmmaker what reached you — a reading of what the work was reaching for, not a star score.</p>
+
+      <!-- The reading + word -->
+      <div id="signal-form">
+        <div class="signal-tri-wrap">
+          <svg id="signal-tri" viewBox="0 0 300 308" xmlns="http://www.w3.org/2000/svg" aria-label="Your signal — three readings: Vision, Craft, Resonance"></svg>
+        </div>
+
+        <div class="signal-word">
+          <label for="signal-word-input">The one word that stays with you</label>
+          <input id="signal-word-input" type="text" maxlength="24" placeholder="one word" autocomplete="off" spellcheck="false" />
+        </div>
+
+        <button id="signal-send" class="signal-send" type="button">Send signal</button>
+        <p class="signal-hint" id="signal-hint">Your reading saves as you go.</p>
+      </div>
+
+      <!-- Confirmation -->
+      <div id="signal-done" class="signal-done" style="display:none">
+        <div class="done-mark">
+          <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+            <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+            <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+            <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+          </svg>
+        </div>
+        <h4>Your signal is in.</h4>
+        <p id="signal-done-text">—</p>
+        <button class="signal-redo" id="signal-redo" type="button">Adjust my signal</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Coming soon state -->
+  <div id="state-coming" class="state" style="display:none">
+    <div class="mark">
+      <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+        <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+        <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+      </svg>
+    </div>
+    <h2>This film hasn't premiered yet.</h2>
+    <p>It's on the program. Hold the date — we'll send the invite when it goes live in the screening room.</p>
+    <a href="discover.html" class="cta">Back to discover</a>
+  </div>
+
+  <!-- Not found state -->
+  <div id="state-notfound" class="state" style="display:none">
+    <div class="mark">
+      <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+        <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+        <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+      </svg>
+    </div>
+    <h2>"That film isn't on the program."</h2>
+    <p>Either the link is old or the title hasn't been catalogued yet. Try the screening room.</p>
+    <a href="discover.html" class="cta">Back to discover</a>
+  </div>
+
+</main>
+
+<div class="footer">"Curated cinema. Hand-set, frame by frame."</div>
+
+<script>
+  // ============ FILM ID FROM URL ============
+  const params = new URLSearchParams(location.search);
+  const filmId = params.get('id') || params.get('slug');
+  // "Details" mode — open the film's page without auto-running the video.
+  const infoMode = (params.get('mode') || '').toLowerCase() === 'info';
+
+  const $ = (id) => document.getElementById(id);
+  const showState = (which) => {
+    ['loading','player','coming','notfound'].forEach(s => {
+      const el = $('state-' + s);
+      if (el) el.style.display = (s === which) ? '' : 'none';
+    });
+  };
+
+  // ============ BRAND BUMPER (Dionysia opening titles, in-player) ============
+  // Plays inside the player frame, before the film starts. Like the Netflix
+  // "ta-dum". Auto-dismisses after ~7.5s (the bumper is an 8s loop — we fade
+  // out before it restarts). User can skip after 1s.
+  const BUMPER_MS = 7500;
+  const SKIP_SHOW_MS = 1000;
+  const bumperState = { done: false, started: false, callbacks: [] };
+
+  function onBumperDone(cb) {
+    if (bumperState.done) return cb();
+    bumperState.callbacks.push(cb);
+  }
+  function finishBumper() {
+    if (bumperState.done) return;
+    bumperState.done = true;
+    const overlay = $('bumper-overlay');
+    if (overlay) {
+      overlay.classList.add('fade-out');
+      setTimeout(() => { overlay && overlay.parentNode && overlay.parentNode.removeChild(overlay); }, 550);
+    }
+    bumperState.callbacks.forEach(fn => { try { fn(); } catch(_){} });
+    bumperState.callbacks = [];
+  }
+  // Call this only when we're about to actually show the player.
+  function startBumper() {
+    if (bumperState.started || bumperState.done) return;
+    bumperState.started = true;
+
+    const overlay = $('bumper-overlay');
+    const frame   = $('bumper-frame');
+    const skipBtn = $('bumper-skip');
+    if (!overlay || !frame || !skipBtn) { finishBumper(); return; }
+
+    // Load the bumper in embed mode — hides its standalone preview UI
+    // (top-left label, bottom-right timer + replay/enter buttons) so only
+    // the animation shows over the player.
+    frame.src = 'brand-bumper.html?embed=1';
+
+    setTimeout(() => skipBtn.classList.add('show'), SKIP_SHOW_MS);
+
+    skipBtn.addEventListener('click', finishBumper);
+    const escHandler = (e) => { if (e.key === 'Escape') finishBumper(); };
+    document.addEventListener('keydown', escHandler);
+    onBumperDone(() => document.removeEventListener('keydown', escHandler));
+
+    setTimeout(finishBumper, BUMPER_MS);
+  }
+
+  if (!filmId) {
+    showState('notfound');
+    finishBumper(); // no film to introduce
+  } else {
+    // Wait for both films.js and Mux Player to be available
+    const ready = () => window.dionysia && window.dionysia.getFilm;
+    const waitFor = (cond, cb, timeout = 4000) => {
+      const start = Date.now();
+      (function tick(){
+        if (cond()) return cb();
+        if (Date.now() - start > timeout) return cb(new Error('timeout'));
+        setTimeout(tick, 80);
+      })();
+    };
+
+    waitFor(ready, async (err) => {
+      if (err) { showState('notfound'); finishBumper(); return; }
+
+      try {
+        const film = await window.dionysia.getFilm(filmId);
+
+        if (!film) { showState('notfound'); finishBumper(); return; }
+
+        if (film.status !== 'live' || !film.muxPlaybackId || film.muxPlaybackId.startsWith('REPLACE_')) {
+          showState('coming');
+          finishBumper(); // nothing to introduce
+          return;
+        }
+
+        // Populate meta
+        $('title').textContent = film.title;
+        $('director').textContent = film.director || '—';
+        $('runtime').textContent = film.runtime ? (film.runtime + ' min') : '—';
+        $('year').textContent = film.year || '';
+        $('synopsis').textContent = film.synopsis || '';
+        document.title = 'Dionysia — ' + film.title;
+
+        // Configure Mux player
+        const player = $('player');
+        player.setAttribute('playback-id', film.muxPlaybackId);
+        player.setAttribute('metadata-video-title', film.title);
+        player.setAttribute('metadata-video-id', film.id);
+        // NOTE: we do NOT set autoplay here — the bumper plays first, then we
+        // call .play() manually once the opening titles finish.
+        if (film.heroUrl || film.posterUrl) {
+          player.setAttribute('poster', film.heroUrl || film.posterUrl);
+        }
+
+        // ===== SUBTITLES / CLOSED CAPTIONS =====
+        // Subtitles can come from two places:
+        //  1. Baked into the Mux asset (text tracks added in the Mux
+        //     dashboard) — Mux Player shows the CC button automatically.
+        //  2. External files listed in films.json under "subtitles":
+        //       "subtitles": [
+        //         { "lang": "en", "label": "English",
+        //           "src": "/assets/films/<slug>/subtitles/en.srt" }
+        //       ]
+        //     Browsers' <track> element only renders WebVTT, so any .srt
+        //     file is fetched and converted to VTT on the fly here.
+        (function attachSubtitles() {
+          // Clear any tracks from a previous film
+          player.querySelectorAll('track').forEach(t => t.remove());
+          const subs = Array.isArray(film.subtitles) ? film.subtitles : [];
+
+          // Clean-caption style baked into the VTT itself. A WebVTT STYLE
+          // block travels with the track, so it works regardless of the
+          // player skin or browser — no black box behind the text, just a
+          // soft shadow so captions stay readable on bright frames.
+          const VTT_STYLE =
+            'STYLE\n' +
+            '::cue {\n' +
+            '  background-color: rgba(0,0,0,0);\n' +
+            '  background: rgba(0,0,0,0);\n' +
+            '  color: #ffffff;\n' +
+            '  text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 0 7px rgba(0,0,0,0.85), 0 0 2px rgba(0,0,0,1);\n' +
+            '  font-weight: 500;\n' +
+            '}\n';
+
+          // Minimal SRT -> WebVTT conversion: add the header + style block,
+          // and turn the comma in timestamps (00:00:01,000) into a period
+          // (00:00:01.000).
+          const srtToVtt = (srt) => 'WEBVTT\n\n' + VTT_STYLE + '\n' + String(srt)
+            .replace(/^﻿/, '')
+            .replace(/\r+/g, '')
+            .replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2');
+
+          subs.forEach((sub, i) => {
+            const srcUrl = sub && (sub.src || sub.url);
+            if (!srcUrl) return;
+
+            const addTrack = (finalSrc) => {
+              const track = document.createElement('track');
+              track.kind = sub.kind || 'subtitles';
+              track.label = sub.label || sub.lang || ('Subtitles ' + (i + 1));
+              track.srclang = sub.lang || sub.srclang || 'en';
+              track.src = finalSrc;
+              if (sub.default) track.default = true;
+              player.appendChild(track);
+            };
+
+            if (/\.srt(\?|$)/i.test(srcUrl)) {
+              // .srt — fetch, convert to VTT, hand the player a blob URL
+              fetch(srcUrl)
+                .then(r => r.ok ? r.text() : Promise.reject(r.status))
+                .then(txt => addTrack(URL.createObjectURL(
+                  new Blob([srtToVtt(txt)], { type: 'text/vtt' })
+                )))
+                .catch(err => console.warn('[subtitles] failed:', srcUrl, err));
+            } else {
+              addTrack(srcUrl); // already .vtt
+            }
+          });
+        })();
+
+        showState('player');
+        if (infoMode) {
+          // Details view — show the title page, don't run the film. Drop the
+          // opening-titles overlay so the poster + play control are visible;
+          // the viewer presses play themselves when they're ready.
+          const ov = $('bumper-overlay');
+          if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+          const eb = $('eyebrow');
+          if (eb) eb.textContent = 'On the Programme';
+          player.addEventListener('play', () => {
+            const e2 = $('eyebrow');
+            if (e2) e2.textContent = 'Now Playing';
+          }, { once: true });
+        } else {
+          startBumper(); // begin opening titles INSIDE the player frame
+        }
+        wireSignalRating(film.id, film);
+        wireWatchlistBtn(film.id);
+        wireFollowBtn(film);
+
+        // ===== Netflix-style fullscreen — fill the screen, no black bars =====
+        // In fullscreen the video switches to object-fit:cover so it fills the
+        // phone screen edge-to-edge (crops the letterbox bars away). Back to
+        // "contain" (fit) for the small embedded player on the page.
+        const syncFullscreenFit = () => {
+          const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+          try { player.style.setProperty('--media-object-fit', fs ? 'cover' : 'contain'); } catch(_) {}
+        };
+        document.addEventListener('fullscreenchange', syncFullscreenFit);
+        document.addEventListener('webkitfullscreenchange', syncFullscreenFit);
+        syncFullscreenFit();
+
+        // ===== PLAYBACK FLOW WITH BUMPER =====
+        // The film stays paused at its very start while the opening titles
+        // play over it. When the bumper finishes, the film begins — once,
+        // from the start. It never plays behind the bumper, so it can never
+        // appear to "restart".
+        if (!infoMode) onBumperDone(() => {
+          const startFilm = () => {
+            if (!player.play) return;
+            try { player.muted = false; } catch(_) {}
+            const p = player.play();
+            if (p && typeof p.catch === 'function') {
+              p.catch(() => {
+                // Browser blocked unmuted autoplay — fall back to muted.
+                try { player.muted = true; player.play && player.play().catch(()=>{}); } catch(_) {}
+              });
+            }
+          };
+          setTimeout(startFilm, 30);
+        });
+      } catch (e) {
+        console.error(e);
+        showState('notfound');
+      }
+    });
+  }
+
+  // ============ SIGNAL RATING (localStorage v1) ============
+  // ============ WATCHLIST BUTTON ============
+  function wireWatchlistBtn(filmId){
+    const btn   = $('wl-btn');
+    const label = $('wl-label');
+    const icon  = $('wl-icon');
+    if (!btn || !filmId) return;
+
+    const wl = () => (window.dionysia && window.dionysia.watchlist) || null;
+    const refresh = () => {
+      const list = wl();
+      const saved = !!(list && list.has(filmId));
+      btn.setAttribute('aria-pressed', saved ? 'true' : 'false');
+      if (label) label.textContent = saved ? 'On Your Watchlist' : 'Add to Watchlist';
+      if (icon) {
+        icon.innerHTML = saved
+          ? '<polyline points="20 6 9 17 4 12"/>'
+          : '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
+      }
+    };
+
+    btn.addEventListener('click', () => {
+      const list = wl();
+      if (!list) return;
+      list.toggle(filmId);
+      refresh();
+    });
+
+    // React to cross-tab edits
+    const list = wl();
+    if (list) list.on(refresh);
+    else {
+      // watchlist.js still loading — try again shortly
+      setTimeout(() => { const l = wl(); if (l) l.on(refresh); refresh(); }, 200);
+    }
+    refresh();
+  }
+
+  // ============ FOLLOW CREATOR BUTTON ============
+  // Follows the film's creator (director) by name. Stored per-device in
+  // following.js — their work then gathers under the Watchlist > Following tab.
+  function wireFollowBtn(film){
+    const btn   = $('follow-btn');
+    const label = $('follow-label');
+    const icon  = $('follow-icon');
+    if (!btn) return;
+
+    const name = String((film && film.director) || '').trim();
+    // No named creator — hide the button rather than show a dead "Follow —".
+    if (!name || name === '—') { btn.style.display = 'none'; return; }
+    btn.style.display = '';
+
+    const fl = () => (window.dionysia && window.dionysia.following) || null;
+    const refresh = () => {
+      const f = fl();
+      const followed = !!(f && f.has(name));
+      btn.setAttribute('aria-pressed', followed ? 'true' : 'false');
+      if (label) label.textContent = (followed ? 'Following ' : 'Follow ') + name;
+      if (icon) {
+        icon.innerHTML = followed
+          ? '<polyline points="20 6 9 17 4 12"/>'
+          : '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>';
+      }
+    };
+
+    btn.addEventListener('click', () => {
+      const f = fl();
+      if (!f) return;
+      f.toggle(name);
+      refresh();
+    });
+
+    // React to cross-tab edits
+    const f = fl();
+    if (f) f.on(refresh);
+    else {
+      // following.js still loading — try again shortly
+      setTimeout(() => { const x = fl(); if (x) x.on(refresh); refresh(); }, 200);
+    }
+    refresh();
+  }
+
+  // The Signal — a finishing ritual. Three readings drawn as the Dionysia
+  // triangle (Vision / Craft / Resonance) plus one word, sent to the filmmaker.
+  function wireSignalRating(filmId, film){
+    const KEY = 'dionysia.signal.' + filmId;
+    const SVGNS = 'http://www.w3.org/2000/svg';
+
+    const svg        = $('signal-tri');
+    const formEl     = $('signal-form');
+    const doneEl     = $('signal-done');
+    const sendBtn    = $('signal-send');
+    const wordInput  = $('signal-word-input');
+    const titleEl    = $('signal-title');
+    const eyebrowEl  = $('signal-eyebrow');
+    const addressedEl= $('signal-addressed');
+    const doneText   = $('signal-done-text');
+    const redoBtn    = $('signal-redo');
+    const sectionEl  = $('signal');
+    if (!svg || !formEl || !sendBtn) return;
+
+    // ----- geometry -----
+    const CX = 150, CY = 152, MAX_R = 92, MIN_R = 20;
+    const AXES = [
+      { key:'vision',    name:'Vision',    dir:{ x:0,        y:-1  }, lx:150, nameY:20,  valY:44 },
+      { key:'craft',     name:'Craft',     dir:{ x:-0.86603, y:0.5 }, lx:44,  nameY:214, valY:237 },
+      { key:'resonance', name:'Resonance', dir:{ x:0.86603,  y:0.5 }, lx:256, nameY:214, valY:237 },
+    ];
+
+    // ----- state (load any saved signal) -----
+    const values = { vision:5, craft:5, resonance:5 };
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(_){}
+    ['vision','craft','resonance'].forEach(k => {
+      const v = parseInt(saved[k], 10);
+      if (v >= 1 && v <= 10) values[k] = v;
+    });
+    if (saved.word && wordInput) wordInput.value = saved.word;
+    const alreadySent = !!saved.sent;
+
+    // ----- helpers -----
+    const mk = (tag, attrs) => {
+      const n = document.createElementNS(SVGNS, tag);
+      for (const k in attrs) n.setAttribute(k, attrs[k]);
+      return n;
+    };
+    const radiusFor = (r) => MIN_R + ((Math.max(1,Math.min(10,r)) - 1) / 9) * (MAX_R - MIN_R);
+    const vertexOf  = (axis) => ({
+      x: CX + axis.dir.x * radiusFor(values[axis.key]),
+      y: CY + axis.dir.y * radiusFor(values[axis.key]),
+    });
+
+    // ----- build the triangle once -----
+    const handleEls = {}, valEls = {};
+    AXES.forEach(axis => {
+      svg.appendChild(mk('line', { class:'axis-guide',
+        x1:CX, y1:CY, x2:CX+axis.dir.x*MAX_R, y2:CY+axis.dir.y*MAX_R }));
+    });
+    const poly = mk('polygon', { id:'tri-poly', points:'' });
+    svg.appendChild(poly);
+    AXES.forEach(axis => {
+      const hit = mk('line', { class:'axis-hit',
+        x1:CX, y1:CY, x2:CX+axis.dir.x*MAX_R, y2:CY+axis.dir.y*MAX_R });
+      hit.dataset.axis = axis.key;
+      svg.appendChild(hit);
+    });
+    AXES.forEach(axis => {
+      const h = mk('circle', { class:'handle', r:7.5, cx:CX, cy:CY });
+      h.dataset.axis = axis.key;
+      svg.appendChild(h);
+      handleEls[axis.key] = h;
+      const nameT = mk('text', { class:'axis-name', x:axis.lx, y:axis.nameY, 'text-anchor':'middle' });
+      nameT.textContent = axis.name.toUpperCase();
+      svg.appendChild(nameT);
+      const valT = mk('text', { class:'axis-val', x:axis.lx, y:axis.valY, 'text-anchor':'middle' });
+      svg.appendChild(valT);
+      valEls[axis.key] = valT;
+    });
+
+    function render(){
+      poly.setAttribute('points', AXES.map(a => {
+        const v = vertexOf(a); return v.x.toFixed(1)+','+v.y.toFixed(1);
+      }).join(' '));
+      AXES.forEach(a => {
+        const v = vertexOf(a);
+        handleEls[a.key].setAttribute('cx', v.x);
+        handleEls[a.key].setAttribute('cy', v.y);
+        valEls[a.key].textContent = values[a.key];
+      });
+    }
+    render();
+
+    // ----- interaction (tap or drag along an axis) -----
+    let activeAxis = null;
+    function svgPoint(evt){
+      const rect = svg.getBoundingClientRect();
+      if (!rect.width || !rect.height) return { x:CX, y:CY };
+      return {
+        x: (evt.clientX - rect.left) / rect.width  * 300,
+        y: (evt.clientY - rect.top)  / rect.height * 308,
+      };
+    }
+    function setFromPointer(axisKey, p){
+      const axis = AXES.find(a => a.key === axisKey);
+      if (!axis) return;
+      const proj = (p.x - CX)*axis.dir.x + (p.y - CY)*axis.dir.y;
+      let ratio = (proj - MIN_R) / (MAX_R - MIN_R);
+      ratio = Math.max(0, Math.min(1, ratio));
+      values[axisKey] = Math.round(1 + ratio*9);
+      render();
+    }
+    svg.addEventListener('pointerdown', (e) => {
+      const target = e.target.closest && e.target.closest('[data-axis]');
+      if (!target) return;
+      activeAxis = target.dataset.axis;
+      svg.classList.add('dragging');
+      try { svg.setPointerCapture(e.pointerId); } catch(_){}
+      setFromPointer(activeAxis, svgPoint(e));
+      e.preventDefault();
+    });
+    svg.addEventListener('pointermove', (e) => {
+      if (activeAxis) setFromPointer(activeAxis, svgPoint(e));
+    });
+    function endDrag(){
+      if (!activeAxis) return;
+      activeAxis = null;
+      svg.classList.remove('dragging');
+      persist(false);
+    }
+    svg.addEventListener('pointerup', endDrag);
+    svg.addEventListener('pointercancel', endDrag);
+
+    // ----- persistence -----
+    function currentWord(){
+      return ((wordInput && wordInput.value) || '').trim().split(/\s+/)[0] || '';
+    }
+    function persist(sent){
+      const data = {
+        vision: values.vision, craft: values.craft, resonance: values.resonance,
+        word: currentWord(), sent: !!sent, ts: Date.now()
+      };
+      try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(_){}
+      return data;
+    }
+    if (wordInput) wordInput.addEventListener('input', () => persist(false));
+
+    // ----- delivery to the filmmaker (active once the `signals` table exists) -----
+    function deliver(data){
+      try {
+        const sb = window.__dionysia_supabase;
+        const user = window.__dionysia_user;
+        if (!sb || typeof sb.from !== 'function') return;
+        sb.from('signals').insert({
+          film_id: filmId,
+          film_slug: (film && film.slug) || null,
+          film_title: (film && film.title) || null,
+          user_email: (user && user.email) || null,
+          vision: data.vision, craft: data.craft, resonance: data.resonance,
+          word: data.word || null
+        }).then(({ error }) => {
+          if (error) console.warn('[signal] delivery pending (table not ready):', error.message);
+        }, () => {});
+      } catch(e){ console.warn('[signal] delivery error:', e); }
+    }
+
+    // ----- views -----
+    function hasSentSignal(){
+      try { return !!JSON.parse(localStorage.getItem(KEY) || '{}').sent; } catch(_){ return false; }
+    }
+    function showForm(){
+      doneEl.style.display = 'none';
+      formEl.style.display = '';
+      sendBtn.textContent = hasSentSignal() ? 'Update signal' : 'Send signal';
+    }
+    function showDone(){
+      const word = currentWord().replace(/[<>&]/g,'');
+      doneText.innerHTML = word
+        ? '“<span class="done-word">' + word + '</span>” — noted. Readings like yours are what the founding circle is built on.'
+        : 'Noted. Readings like yours are what the founding circle is built on.';
+      formEl.style.display = 'none';
+      doneEl.style.display = '';
+    }
+
+    // ----- send / adjust -----
+    sendBtn.addEventListener('click', () => {
+      const data = persist(true);
+      deliver(data);
+      sendBtn.disabled = true;
+      showDone();
+    });
+    redoBtn.addEventListener('click', () => {
+      sendBtn.disabled = false;
+      showForm();
+    });
+
+    // ----- addressed copy -----
+    if (addressedEl) {
+      const dir = film && film.director;
+      addressedEl.textContent = (dir ? dir + ' made this film. ' : '')
+        + 'Tell them what reached you — Vision (how far it reached), Craft (how it was made), Resonance (how it stays with you).';
+    }
+
+    // ----- the panel rises when the film ends -----
+    const player = $('player');
+    if (player) {
+      player.addEventListener('ended', () => {
+        if (sectionEl)  sectionEl.classList.add('signal--risen');
+        if (titleEl)    titleEl.textContent = 'The reel has finished.';
+        if (eyebrowEl)  eyebrowEl.textContent = 'Now — your signal';
+        if (sectionEl) { try { sectionEl.scrollIntoView({ behavior:'smooth', block:'center' }); } catch(_){} }
+      }, { once:true });
+    }
+
+    // ----- initial view -----
+    if (alreadySent) showDone(); else showForm();
+  }
+</script>
+</body>
+</html>

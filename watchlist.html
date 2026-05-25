@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<title>Dionysia — Watchlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: { DEFAULT: '#f3eadd', mute: '#a99c8c', dim: '#6f6457' },
+          bg:  { DEFAULT: '#0a0707', elev: '#120c0c', card: '#15100f', line: '#1f1716' },
+          wine:{ DEFAULT: '#6b1220', deep: '#3d0a13', glow: '#8b1a2b' },
+          gold:{ DEFAULT: '#c9a35a', soft: '#e0c386', deep: '#8a6f37' },
+        },
+        fontFamily: {
+          serif: ['"Cormorant Garamond"', 'serif'],
+          sans:  ['Inter', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  :root { --bg:#0a0707; --ink:#f3eadd; --gold:#c9a35a; --gold-soft:#e0c386; --wine:#6b1220; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+  .font-serif { font-family: 'Cormorant Garamond', serif; }
+  .display { font-family: 'Cormorant Garamond', serif; font-weight: 500; letter-spacing: -0.005em; }
+  .eyebrow {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    font-size: 11px; color: var(--gold);
+  }
+  .label {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    font-size: 10.5px; color: var(--ink); opacity: 0.7;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
+    opacity: 0.07; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.07 0 0 0 0 0.05 0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  ::selection { background: rgba(201,163,90,0.35); color: #fff; }
+
+  /* Nav (matched from discover.html) */
+  .nav-pill {
+    padding: 7px 14px; border-radius: 2px;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(243,234,221,0.6);
+    transition: color .3s, background .3s;
+  }
+  .nav-pill:hover { color: var(--ink); }
+  .nav-pill--active { color: var(--gold); }
+
+  /* Watchlist tabs */
+  .wl-tab {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 11px 18px;
+    border-radius: 2px;
+    border: 1px solid rgba(243,234,221,0.1);
+    background: transparent;
+    color: rgba(243,234,221,0.7);
+    font-size: 12.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: border-color .3s, color .3s, background .3s;
+    cursor: pointer;
+  }
+  .wl-tab:hover { color: var(--ink); border-color: rgba(243,234,221,0.25); }
+  .wl-tab--active {
+    color: #1a0a0d;
+    background: linear-gradient(180deg, #d8b269, #b58a3f);
+    border-color: transparent;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 14px 30px -16px rgba(201,163,90,0.45);
+  }
+  .wl-tab .tab-count {
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+    opacity: 0.55;
+    letter-spacing: 0.06em;
+  }
+  .wl-tab--active .tab-count { color: rgba(26,10,13,0.6); opacity: 1; }
+
+  /* Hairline rule */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(243,234,221,0.08) 20%, rgba(243,234,221,0.08) 80%, transparent);
+  }
+
+  /* Empty state sigil illustration — three concentric outlined triangles, drawn-in style */
+  .empty-sigil { position: relative; }
+  .empty-sigil svg {
+    width: 130px; height: 130px;
+    display: block;
+    overflow: visible;
+  }
+  .empty-sigil .ring {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid rgba(201,163,90,0.18);
+    pointer-events: none;
+  }
+  .empty-sigil .ring-1 { width: 200px; height: 200px; }
+  .empty-sigil .ring-2 { width: 270px; height: 270px; border-color: rgba(201,163,90,0.08); }
+  .empty-sigil .ring-3 { width: 340px; height: 340px; border-color: rgba(201,163,90,0.04); }
+  .empty-sigil .glow {
+    position: absolute; left: 50%; top: 50%;
+    width: 240px; height: 240px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(201,163,90,0.16), transparent 65%);
+    pointer-events: none;
+    filter: blur(2px);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    padding: 0.7rem 1.15rem;
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    transition: transform .35s, background .3s, color .3s, border-color .3s, box-shadow .35s;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, #d8b269, #b58a3f);
+    color: #1a0a0d;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 14px 40px -14px rgba(201,163,90,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 22px 50px -16px rgba(201,163,90,0.55);
+  }
+  .btn-ghost {
+    color: var(--ink);
+    border-color: rgba(243,234,221,0.22);
+    background: rgba(255,255,255,0.02);
+  }
+  .btn-ghost:hover {
+    border-color: rgba(201,163,90,0.55);
+    color: var(--gold-soft);
+  }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .9s cubic-bezier(.2,.6,.2,1), transform .9s cubic-bezier(.2,.6,.2,1); transition-delay: var(--rd, 0ms); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  .logo-mark { display: inline-block; }
+
+  /* Saved film tile */
+  .wl-tile {
+    position: relative;
+    transition: transform .4s cubic-bezier(.2,.6,.2,1);
+  }
+  .wl-tile:hover { transform: translateY(-3px); }
+  .wl-tile-frame {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(243,234,221,0.06);
+    transition: border-color .35s;
+    background: #15100f;
+  }
+  .wl-tile:hover .wl-tile-frame { border-color: rgba(201,163,90,0.4); }
+  .wl-tile-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .wl-tile-veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(10,7,7,0.7) 100%);
+    pointer-events: none;
+  }
+  .wl-remove {
+    position: absolute; top: 8px; right: 8px;
+    width: 30px; height: 30px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: rgba(10,7,7,0.75);
+    border: 1px solid rgba(243,234,221,0.18);
+    color: var(--ink);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .25s, border-color .25s, color .25s, transform .25s;
+    backdrop-filter: blur(4px);
+  }
+  .wl-tile:hover .wl-remove { opacity: 1; }
+  .wl-remove:hover { border-color: var(--wine); color: #ff8093; transform: scale(1.08); }
+  .wl-tile-meta { padding-top: 14px; }
+  .wl-tile-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  /* "Soon" pill on tabs that aren't built yet */
+  .tab-soon {
+    font-family: 'Inter', sans-serif; font-weight: 600;
+    font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 3px 6px; border-radius: 2px;
+    border: 1px solid rgba(201,163,90,0.35);
+    color: var(--gold-soft);
+    background: rgba(201,163,90,0.08);
+  }
+  .wl-tab--active .tab-soon {
+    border-color: rgba(26,10,13,0.4);
+    color: rgba(26,10,13,0.72);
+    background: rgba(26,10,13,0.12);
+  }
+
+  /* Following tab — one block per creator */
+  .creator-block { margin-bottom: 3.4rem; }
+  .creator-block:last-child { margin-bottom: 0; }
+  .creator-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 1rem; padding-bottom: 0.9rem; margin-bottom: 1.7rem;
+    border-bottom: 1px solid rgba(243,234,221,0.08);
+  }
+  .creator-name {
+    font-family: 'Cormorant Garamond', serif; font-weight: 500;
+    font-size: 27px; line-height: 1.1; color: var(--ink);
+  }
+  .creator-sub {
+    font-family: 'Inter', sans-serif; font-size: 11.5px;
+    letter-spacing: 0.05em; color: #a99c8c; margin-top: 4px;
+  }
+  .creator-unfollow {
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    font-family: 'Inter', sans-serif; font-size: 10.5px;
+    letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500;
+    border-radius: 2px; cursor: pointer;
+    border: 1px solid rgba(201,163,90,0.5);
+    color: var(--gold-soft); background: rgba(201,163,90,0.06);
+    transition: border-color .25s, color .25s, background .25s;
+  }
+  .creator-unfollow:hover {
+    border-color: var(--wine); color: #ff8093;
+    background: rgba(107,18,32,0.14);
+  }
+  .creator-unfollow .uf-off { display: none; }
+  .creator-unfollow:hover .uf-on { display: none; }
+  .creator-unfollow:hover .uf-off { display: inline; }
+
+  /* The watchlist X has no meaning inside the Following tab — hide it there */
+  #wl-following-section .wl-remove { display: none !important; }
+
+  /* Dimmed, non-clickable "coming soon" button */
+  .btn.is-soon { opacity: 0.5; cursor: default; pointer-events: none; }
+</style>
+<!-- Plausible analytics -->
+<script async src="https://plausible.io/js/pa-h4cO0vpBy-TIQBp-gSbyx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<!-- Auth gate -->
+<script src="gate.js"></script>
+<!-- Mobile nav -->
+<script src="mobile-nav.js" defer></script>
+<!-- Films + watchlist data -->
+<script src="films.js" defer></script>
+<script src="watchlist.js" defer></script>
+<script src="following.js" defer></script>
+</head>
+<body class="bg-bg text-ink" data-screen-label="Watchlist">
+
+<div class="grain"></div>
+
+<!-- ============== NAV (mirrors discover.html) ============== -->
+<header class="sticky top-0 z-50 backdrop-blur-md bg-bg/70 border-b border-white/5">
+  <nav class="pl-6 md:pl-12 lg:pl-16 pr-4 md:pr-5 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <svg class="logo-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 9.2 L24.4 24 L7.6 24 Z" stroke="#c9a35a" stroke-width="0.9" fill="none" opacity="0.9"/>
+        <path d="M3 27.5 L12.6 27.5 L7.6 18.3 Z" fill="#6b1220"/>
+        <path d="M16 3 L29 27.5 L12.6 27.5 L7.6 18.3 Z" stroke="#f3eadd" stroke-width="1.15" fill="none" stroke-linejoin="miter"/>
+      </svg>
+      <span class="display tracking-[0.22em] text-[15px] uppercase">Dionysia</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2">
+      <a href="discover.html" class="nav-pill">Home</a>
+      <a href="movies.html" class="nav-pill">Movies</a>
+      <a href="series.html" class="nav-pill">Series</a>
+      <a href="shorts.html" class="nav-pill">Short Films</a>
+      <a href="watchlist.html" class="nav-pill nav-pill--active">Watchlist</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:border-gold/50 transition-colors" aria-label="Search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f3eadd" stroke-width="1.5">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+      </button>
+      <a href="account.html" class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gold/40 hover:border-gold transition-colors overflow-hidden" aria-label="Account" style="background: linear-gradient(140deg, #6b1220, #3d0a13);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e0c386" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="12" cy="8" r="3.5"/>
+          <path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main class="px-6 md:px-12 lg:px-16 pt-16 pb-32 max-w-[1400px] mx-auto">
+
+  <!-- ============== PAGE HEADER ============== -->
+  <section class="reveal">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+      <div>
+        <p class="eyebrow mb-3">Your private archive</p>
+        <h1 class="display text-[64px] md:text-[88px] leading-[0.95] tracking-tight">Watchlist</h1>
+        <p class="font-serif italic text-ink-mute text-lg md:text-xl mt-3">— what you've chosen to keep close —</p>
+      </div>
+      <div class="flex items-center gap-3 text-[12px] tracking-[0.2em] uppercase text-ink-dim">
+        <span class="inline-flex items-center gap-2">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 3h14v18l-7-5-7 5z"/></svg>
+          <span id="wl-count-badge">0</span> saved
+        </span>
+        <span class="opacity-40">·</span>
+        <span>Saved on this device</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="hairline mb-9"></div>
+
+  <!-- ============== TAB BAR ============== -->
+  <section class="reveal" style="--rd:120ms">
+    <div class="flex flex-wrap items-center gap-2 mb-12" role="tablist">
+      <button class="wl-tab wl-tab--active" role="tab" aria-selected="true" data-tab="films">
+        Films &amp; Series <span class="tab-count" id="wl-tab-count">0</span>
+      </button>
+      <button class="wl-tab" role="tab" aria-selected="false" data-tab="following">
+        Following <span class="tab-count" id="wl-following-count">0</span>
+      </button>
+      <button class="wl-tab" role="tab" aria-selected="false" data-tab="live">
+        Live &amp; Upcoming <span class="tab-soon">Soon</span>
+      </button>
+      <button class="wl-tab" role="tab" aria-selected="false" data-tab="replays">
+        Replays <span class="tab-soon">Soon</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============== SAVED FILMS GRID (rendered from localStorage) ============== -->
+  <section id="wl-grid-section" class="reveal" style="--rd:200ms; display:none;">
+    <div id="wl-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-7 gap-y-12 mb-16">
+      <!-- tiles injected here -->
+    </div>
+  </section>
+
+  <!-- ============== EMPTY STATE ============== -->
+  <section id="wl-empty-section" class="reveal" style="--rd:240ms">
+    <div class="relative rounded-md border border-white/5 overflow-hidden" style="background: linear-gradient(180deg, rgba(25,17,16,0.45), rgba(15,10,10,0.45));">
+      <!-- soft top gradient seam -->
+      <div class="absolute inset-x-0 top-0 h-px" style="background: linear-gradient(90deg, transparent, rgba(201,163,90,0.25) 30%, rgba(201,163,90,0.25) 70%, transparent);"></div>
+
+      <div class="px-6 md:px-12 py-20 md:py-28 flex flex-col items-center text-center">
+        <!-- Sigil illustration -->
+        <div class="empty-sigil mb-9">
+          <span class="glow"></span>
+          <span class="ring ring-3"></span>
+          <span class="ring ring-2"></span>
+          <span class="ring ring-1"></span>
+          <svg viewBox="0 0 130 130" aria-hidden="true">
+            <!-- A small bookmark/sigil — references the Dionysia mark -->
+            <path d="M65 30 L100 102 L65 102 L45 70 Z"
+                  stroke="#f3eadd" stroke-width="1.4" stroke-linejoin="miter"
+                  fill="none" opacity="0.85"/>
+            <path d="M65 50 L88 95 L40 95 Z"
+                  stroke="#c9a35a" stroke-width="1" fill="none" opacity="0.75"/>
+            <!-- inner wine flicker -->
+            <path d="M30 110 L50 110 L40 92 Z" fill="#6b1220" opacity="0.85"/>
+          </svg>
+        </div>
+
+        <p class="eyebrow mb-4">Nothing saved — yet</p>
+        <h2 class="display text-[34px] md:text-[44px] leading-[1.1] max-w-2xl mb-4">
+          Your archive is empty. <span class="text-ink/50 italic font-serif">Begin building it.</span>
+        </h2>
+        <p class="text-ink/65 text-[15px] md:text-[16px] leading-relaxed max-w-md mb-9">
+          Save films, series, and live screenings you want to return to. Nothing here is suggested by an algorithm — only what you choose to keep.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-3 items-center">
+          <a href="discover.html" class="btn btn-primary">Browse new arrivals <span>→</span></a>
+          <span class="btn btn-ghost is-soon">Featured creators <span class="tab-soon">Soon</span></span>
+        </div>
+
+        <!-- Footnote -->
+        <p class="font-serif italic text-ink-mute text-[14px] mt-12 max-w-sm leading-snug">
+          "Curation, not algorithm. The shelf is yours to fill."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FOLLOWING TAB ============== -->
+  <section id="wl-following-section" style="display:none;">
+    <!-- creator blocks injected by script -->
+  </section>
+
+  <!-- ============== LIVE & UPCOMING / REPLAYS — coming soon ============== -->
+  <section id="wl-soon-section" style="display:none;">
+    <div class="relative rounded-md border border-white/5 overflow-hidden" style="background: linear-gradient(180deg, rgba(25,17,16,0.45), rgba(15,10,10,0.45));">
+      <div class="absolute inset-x-0 top-0 h-px" style="background: linear-gradient(90deg, transparent, rgba(201,163,90,0.25) 30%, rgba(201,163,90,0.25) 70%, transparent);"></div>
+      <div class="px-6 md:px-12 py-20 md:py-28 flex flex-col items-center text-center">
+        <p class="eyebrow mb-4">Coming soon</p>
+        <h2 id="wl-soon-title" class="display text-[32px] md:text-[44px] leading-[1.1] mb-4">Live &amp; Upcoming</h2>
+        <p id="wl-soon-text" class="text-ink/65 text-[15px] md:text-[16px] leading-relaxed max-w-md">
+          Scheduled premieres and live screenings will gather here — so you never miss the moment a film opens.
+        </p>
+        <p class="font-serif italic text-ink-mute text-[14px] mt-11 max-w-sm leading-snug">
+          "On the way — part of what opens after the founding première."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== HINT ROW ============== -->
+  <section class="reveal mt-14" style="--rd:360ms">
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="p-6 rounded-md border border-white/5" style="background: linear-gradient(180deg, rgba(25,17,16,0.35), rgba(15,10,10,0.35));">
+        <p class="text-gold text-[11px] tracking-[0.22em] uppercase mb-2">01 · Save</p>
+        <p class="font-serif text-[20px] leading-snug mb-2">Tap the bookmark on any film.</p>
+        <p class="text-ink-mute text-[13px] leading-relaxed">Saved works land here, organized by type. Notes &amp; ratings travel with them.</p>
+      </div>
+      <div class="p-6 rounded-md border border-white/5" style="background: linear-gradient(180deg, rgba(25,17,16,0.35), rgba(15,10,10,0.35));">
+        <p class="text-gold text-[11px] tracking-[0.22em] uppercase mb-2">02 · Follow</p>
+        <p class="font-serif text-[20px] leading-snug mb-2">Subscribe to creators you trust.</p>
+        <p class="text-ink-mute text-[13px] leading-relaxed">Open a film and follow its creator. Their work gathers under <em class="font-serif">Following</em> — never buried in a feed.</p>
+      </div>
+      <div class="p-6 rounded-md border border-white/5" style="background: linear-gradient(180deg, rgba(25,17,16,0.35), rgba(15,10,10,0.35));">
+        <p class="text-gold text-[11px] tracking-[0.22em] uppercase mb-2">03 · Return</p>
+        <p class="font-serif text-[20px] leading-snug mb-2">Replays remember where you stopped.</p>
+        <p class="text-ink-mute text-[13px] leading-relaxed">Pick up mid-frame, with your last note still attached.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-white/5 py-8 px-6 md:px-10">
+  <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] tracking-[0.22em] uppercase text-ink-dim">
+    <span>© 2026 Dionysia</span>
+    <div class="flex items-center gap-5">
+      <a href="brand-bumper.html" class="hover:text-gold transition-colors">▷ Opening titles</a>
+      <span class="opacity-30">·</span>
+      <a href="index.html" class="hover:text-gold transition-colors">About</a>
+    </div>
+    <a href="discover.html" class="hover:text-gold transition-colors">Back to discover →</a>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.05, rootMargin: "0px 0px -4% 0px" });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ============== WATCHLIST + FOLLOWING ==============
+  (function () {
+    const grid        = document.getElementById('wl-grid');
+    const gridSec     = document.getElementById('wl-grid-section');
+    const emptySec    = document.getElementById('wl-empty-section');
+    const followSec   = document.getElementById('wl-following-section');
+    const soonSec     = document.getElementById('wl-soon-section');
+    const countBadge  = document.getElementById('wl-count-badge');
+    const tabCount    = document.getElementById('wl-tab-count');
+    const followCount = document.getElementById('wl-following-count');
+    const soonTitle   = document.getElementById('wl-soon-title');
+    const soonText    = document.getElementById('wl-soon-text');
+
+    let currentTab = 'films';
+    let savedCount = 0;
+
+    const escapeHtml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+
+    const ready = () => window.dionysia && window.dionysia.getFilms
+      && window.dionysia.watchlist && window.dionysia.following;
+    const wait  = (cond, cb, t = 0) => {
+      if (cond()) return cb();
+      if (t > 4000) return;
+      setTimeout(() => wait(cond, cb, t + 80), 80);
+    };
+
+    // Single source of truth for which tab's content is visible.
+    function applyTabVisibility() {
+      const showFilms  = currentTab === 'films';
+      const showFollow = currentTab === 'following';
+      const showSoon   = currentTab === 'live' || currentTab === 'replays';
+      if (gridSec)   gridSec.style.display   = (showFilms && savedCount > 0)   ? '' : 'none';
+      if (emptySec)  emptySec.style.display  = (showFilms && savedCount === 0) ? '' : 'none';
+      if (followSec) followSec.style.display = showFollow ? '' : 'none';
+      if (soonSec)   soonSec.style.display   = showSoon ? '' : 'none';
+      if (showSoon && soonTitle && soonText) {
+        if (currentTab === 'replays') {
+          soonTitle.textContent = 'Replays';
+          soonText.textContent  = 'Films you have started will wait here, holding the exact frame you left — ready to pick up where you stopped.';
+        } else {
+          soonTitle.textContent = 'Live & Upcoming';
+          soonText.textContent  = 'Scheduled premieres and live screenings will gather here — so you never miss the moment a film opens.';
+        }
+      }
+    }
+
+    // ----- Tab switching -----
+    document.querySelectorAll('.wl-tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.wl-tab').forEach(t => {
+          t.classList.remove('wl-tab--active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('wl-tab--active');
+        tab.setAttribute('aria-selected', 'true');
+        currentTab = tab.getAttribute('data-tab') || 'films';
+        applyTabVisibility();
+        if (currentTab === 'following') renderFollowing();
+      });
+    });
+
+    function tileHtml(film) {
+      const title    = escapeHtml(film.title || 'Untitled');
+      const director = escapeHtml(film.director || '');
+      const year     = escapeHtml(film.year || '');
+      const id       = escapeHtml(film.id || '');
+      const poster   = (film.posterUrl && !String(film.posterUrl).startsWith('REPLACE_'))
+        ? `<img src="${escapeHtml(film.posterUrl)}" alt="${title} poster" loading="lazy" />`
+        : (film.heroUrl
+            ? `<img src="${escapeHtml(film.heroUrl)}" alt="${title}" loading="lazy" />`
+            : `<div style="position:absolute;inset:0;background:linear-gradient(160deg,#1d1426,#0c0e1a);"></div>`);
+
+      return `
+        <div class="wl-tile" data-film-id="${id}">
+          <a href="watch.html?id=${id}" class="wl-tile-frame block">
+            ${poster}
+            <div class="wl-tile-veil"></div>
+          </a>
+          <button class="wl-remove" type="button" aria-label="Remove from watchlist" data-remove-id="${id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <div class="wl-tile-meta">
+            <p class="wl-tile-title">${title}</p>
+            <p class="text-[12px] text-ink-mute tracking-wide">
+              ${director ? director : ''}${director && year ? ' · ' : ''}${year}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    // ----- Saved films (Films & Series tab) -----
+    async function renderSaved() {
+      const wl = window.dionysia.watchlist;
+      const ids = wl.list();
+      const allFilms = await window.dionysia.getFilms();
+      const filmsById = {};
+      (allFilms || []).forEach(f => { if (f && f.id) filmsById[f.id] = f; });
+
+      // Preserve save order
+      const items = ids.map(id => filmsById[id]).filter(Boolean);
+      savedCount = items.length;
+
+      if (countBadge) countBadge.textContent = String(savedCount);
+      if (tabCount)   tabCount.textContent   = String(savedCount);
+
+      if (grid) {
+        grid.innerHTML = items.map(tileHtml).join('');
+        grid.querySelectorAll('[data-remove-id]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            wl.remove(btn.getAttribute('data-remove-id')); // re-renders via 'on'
+          });
+        });
+      }
+      applyTabVisibility();
+    }
+
+    // ----- Followed creators (Following tab) -----
+    async function renderFollowing() {
+      if (!followSec) return;
+      const creators = window.dionysia.following.list();
+      if (followCount) followCount.textContent = String(creators.length);
+
+      if (!creators.length) {
+        followSec.innerHTML =
+          '<div class="relative rounded-md border border-white/5 overflow-hidden" style="background: linear-gradient(180deg, rgba(25,17,16,0.45), rgba(15,10,10,0.45));">'
+        +   '<div class="px-6 md:px-12 py-20 md:py-24 flex flex-col items-center text-center">'
+        +     '<p class="eyebrow mb-4">Not following anyone — yet</p>'
+        +     '<h2 class="display text-[30px] md:text-[40px] leading-[1.1] max-w-xl mb-4">Follow the filmmakers you trust.</h2>'
+        +     '<p class="text-ink/65 text-[15px] leading-relaxed max-w-md mb-9">Open any film and tap <em class="font-serif">Follow</em> beside the creator&#39;s name. Their work gathers here — chosen by you, not an algorithm.</p>'
+        +     '<a href="discover.html" class="btn btn-primary">Browse new arrivals <span>&rarr;</span></a>'
+        +   '</div>'
+        + '</div>';
+        return;
+      }
+
+      const allFilms = await window.dionysia.getFilms();
+      const live = (allFilms || []).filter(f => f && f.status === 'live');
+      followSec.innerHTML = creators.map(name => {
+        const films = live.filter(f => String(f.director || '').trim() === name);
+        const n = films.length;
+        const tiles = films.map(tileHtml).join('');
+        return ''
+          + '<div class="creator-block">'
+          +   '<div class="creator-head">'
+          +     '<div>'
+          +       '<p class="creator-name">' + escapeHtml(name) + '</p>'
+          +       '<p class="creator-sub">' + n + (n === 1 ? ' film' : ' films') + ' on Dionysia</p>'
+          +     '</div>'
+          +     '<button class="creator-unfollow" type="button" data-unfollow="' + escapeHtml(name) + '">'
+          +       '<span class="uf-on">Following</span><span class="uf-off">Unfollow</span>'
+          +     '</button>'
+          +   '</div>'
+          +   '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-7 gap-y-12">'
+          +     (tiles || '<p class="text-ink/50 font-serif italic">No films live yet.</p>')
+          +   '</div>'
+          + '</div>';
+      }).join('');
+
+      followSec.querySelectorAll('[data-unfollow]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          window.dionysia.following.remove(btn.getAttribute('data-unfollow'));
+        });
+      });
+    }
+
+    wait(ready, () => {
+      renderSaved();
+      renderFollowing();
+      window.dionysia.watchlist.on(renderSaved);
+      window.dionysia.following.on(renderFollowing);
+    });
+  })();
+</script>
+
+</body>
+</html>

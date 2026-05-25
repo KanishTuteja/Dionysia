@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<title>DIONYSIA — A home for serious AI cinema</title>
+<meta name="description" content="A curated streaming and discovery platform for filmmakers using AI alongside real cinema craft. Curation, not algorithm sludge." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: {
+            DEFAULT: '#f3eadd',
+            mute: '#a99c8c',
+            dim: '#6f6457',
+          },
+          bg: {
+            DEFAULT: '#0a0707',
+            elev: '#120c0c',
+            line: '#1f1716',
+          },
+          wine: {
+            DEFAULT: '#6b1220',
+            deep: '#3d0a13',
+            glow: '#8b1a2b',
+          },
+          gold: {
+            DEFAULT: '#c9a35a',
+            soft: '#e0c386',
+            deep: '#8a6f37',
+          },
+        },
+        fontFamily: {
+          serif: ['"Cormorant Garamond"', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  :root {
+    --bg: #0a0707;
+    --ink: #f3eadd;
+    --gold: #c9a35a;
+    --wine: #6b1220;
+  }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  .font-serif { font-family: 'Cormorant Garamond', serif; }
+
+  /* Display headings */
+  .display {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 0.95;
+  }
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--gold);
+  }
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,163,90,0.45), transparent);
+  }
+
+  /* Animated mesh background — slow drifting blurred conic + radial blobs */
+  .mesh {
+    position: absolute; inset: -20%;
+    pointer-events: none; z-index: 0;
+    filter: blur(70px) saturate(110%);
+    opacity: 0.85;
+  }
+  .mesh::before, .mesh::after {
+    content: ""; position: absolute; inset: 0;
+  }
+  .mesh::before {
+    background:
+      radial-gradient(40% 50% at 22% 30%, rgba(139,26,43,0.55), transparent 70%),
+      radial-gradient(35% 45% at 80% 20%, rgba(60,8,15,0.65), transparent 70%),
+      radial-gradient(45% 55% at 70% 75%, rgba(107,18,32,0.55), transparent 70%),
+      radial-gradient(30% 35% at 30% 80%, rgba(201,163,90,0.18), transparent 70%);
+    animation: drift 28s ease-in-out infinite alternate;
+  }
+  .mesh::after {
+    background:
+      radial-gradient(35% 40% at 60% 40%, rgba(201,163,90,0.12), transparent 70%),
+      radial-gradient(45% 50% at 15% 65%, rgba(40,5,10,0.7), transparent 70%);
+    animation: drift2 36s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+  @keyframes drift {
+    0%   { transform: translate3d(0,0,0) scale(1); }
+    50%  { transform: translate3d(-3%, 2%, 0) scale(1.05); }
+    100% { transform: translate3d(2%, -2%, 0) scale(1.02); }
+  }
+  @keyframes drift2 {
+    0%   { transform: translate3d(0,0,0) scale(1.02); }
+    100% { transform: translate3d(-2%, 3%, 0) scale(1.06); }
+  }
+
+  /* Grain — SVG turbulence overlay */
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
+    opacity: 0.10; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.07 0 0 0 0 0.05 0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* Vignette over hero */
+  .vignette {
+    position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    background:
+      radial-gradient(ellipse 100% 70% at 50% 40%, transparent 40%, rgba(10,7,7,0.55) 75%, rgba(10,7,7,1) 100%),
+      linear-gradient(180deg, rgba(10,7,7,0.2) 0%, transparent 30%, transparent 70%, rgba(10,7,7,0.9) 100%);
+  }
+
+  /* Reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 1s cubic-bezier(.2,.6,.2,1), transform 1s cubic-bezier(.2,.6,.2,1);
+    transition-delay: var(--rd, 0ms);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.95rem 1.5rem;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: transform .4s cubic-bezier(.2,.6,.2,1), background .3s, color .3s, border-color .3s, box-shadow .4s;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, #d8b269, #b58a3f);
+    color: #1a0a0d;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 14px 40px -14px rgba(201,163,90,0.45);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 22px 50px -16px rgba(201,163,90,0.6);
+  }
+  .btn-ghost {
+    color: #f3eadd;
+    border-color: rgba(243,234,221,0.25);
+    background: rgba(255,255,255,0.02);
+    backdrop-filter: blur(6px);
+  }
+  .btn-ghost:hover {
+    border-color: rgba(201,163,90,0.55);
+    color: #e0c386;
+    transform: translateY(-2px);
+  }
+  .btn .arrow {
+    transition: transform .4s cubic-bezier(.2,.6,.2,1);
+  }
+  .btn:hover .arrow { transform: translateX(4px); }
+
+  /* Cards */
+  .card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(30,20,18,0.55), rgba(15,10,10,0.55));
+    border: 1px solid rgba(243,234,221,0.07);
+    border-radius: 4px;
+    padding: 2rem 1.75rem 2.25rem;
+    transition: transform .5s cubic-bezier(.2,.6,.2,1), border-color .5s, box-shadow .5s, background .5s;
+    overflow: hidden;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(80% 60% at 50% 0%, rgba(201,163,90,0.08), transparent 60%);
+    opacity: 0; transition: opacity .6s;
+    pointer-events: none;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201,163,90,0.35);
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.7);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Inputs */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgba(243,234,221,0.18);
+    padding: 0.85rem 0;
+    color: #f3eadd;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    transition: border-color .3s;
+    outline: none;
+  }
+  .field::placeholder { color: rgba(243,234,221,0.35); }
+  .field:focus { border-color: var(--gold); }
+
+  /* Kill browser autofill's white/yellow background — keep the field on the
+     dark theme, matching the sign-in window. The huge transition delay stops
+     Chrome from ever painting the autofill background color. */
+  .field:-webkit-autofill,
+  .field:-webkit-autofill:hover,
+  .field:-webkit-autofill:focus,
+  .field:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--ink) !important;
+    caret-color: var(--gold) !important;
+    transition: background-color 600000s 0s, color 600000s 0s !important;
+    -webkit-background-clip: text !important;
+            background-clip: text !important;
+  }
+  /* Firefox autofill */
+  .field:autofill {
+    background: transparent !important;
+    color: var(--ink) !important;
+  }
+
+  /* Marquee */
+  .marquee {
+    display: flex;
+    gap: 4rem;
+    animation: marq 50s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes marq {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Manifesto */
+  .manifesto-line {
+    display: block;
+    transition: color .4s;
+  }
+  .manifesto-line:hover { color: var(--gold); }
+
+  /* Section label */
+  .sec-label {
+    display: inline-flex; align-items: center; gap: 0.85rem;
+  }
+  .sec-label::before {
+    content: "";
+    width: 28px; height: 1px;
+    background: rgba(201,163,90,0.6);
+  }
+
+  /* Subtle drifting sparks (very few, very slow) */
+  .spark {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: rgba(224,195,134,0.7);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(224,195,134,0.6);
+    animation: spark-drift linear infinite;
+    opacity: 0;
+  }
+  @keyframes spark-drift {
+    0%   { opacity: 0; transform: translateY(0) translateX(0); }
+    10%  { opacity: 0.9; }
+    90%  { opacity: 0.9; }
+    100% { opacity: 0; transform: translateY(-120px) translateX(40px); }
+  }
+
+  /* Selection */
+  ::selection { background: rgba(201,163,90,0.35); color: #fff; }
+
+  /* Hero scroll cue */
+  .scroll-cue {
+    width: 1px; height: 56px;
+    background: linear-gradient(180deg, transparent, rgba(243,234,221,0.5), transparent);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-cue::after {
+    content: "";
+    position: absolute; left: 0; top: -30%;
+    width: 100%; height: 30%;
+    background: linear-gradient(180deg, transparent, var(--gold), transparent);
+    animation: cue 2.4s ease-in-out infinite;
+  }
+  @keyframes cue {
+    0%   { top: -40%; }
+    100% { top: 110%; }
+  }
+
+  /* Manifesto strip background */
+  .manifesto-bg {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(107,18,32,0.25), transparent 70%),
+      linear-gradient(180deg, #0a0707, #14090b 50%, #0a0707);
+    position: relative;
+  }
+  .manifesto-bg::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(90deg, rgba(243,234,221,0.04) 1px, transparent 1px);
+    background-size: 80px 100%;
+    pointer-events: none;
+    mask-image: linear-gradient(180deg, transparent, black 20%, black 80%, transparent);
+  }
+
+  /* Pillar bullets */
+  .pillar {
+    border-left: 1px solid rgba(243,234,221,0.08);
+    padding-left: 1.25rem;
+    transition: border-color .4s;
+  }
+  .pillar:hover { border-left-color: var(--gold); }
+
+  /* Form transition */
+  .form-stack { position: relative; }
+  .thanks {
+    opacity: 0; transform: translateY(8px);
+    transition: opacity .6s, transform .6s;
+    pointer-events: none;
+    position: absolute; inset: 0;
+  }
+  .form-stack.sent .form-inner {
+    opacity: 0; transform: translateY(-8px);
+    transition: opacity .5s, transform .5s;
+    pointer-events: none;
+  }
+  .form-stack.sent .thanks {
+    opacity: 1; transform: none;
+  }
+  .form-inner { transition: opacity .5s, transform .5s; }
+
+  /* Logo mark — Greek-ish Δ + serif D */
+  .mark {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+  }
+  .mark-glyph {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+  .mark-glyph .delta { color: var(--gold); font-style: italic; }
+
+  /* Hero kinetic title — accent letter */
+  .title-accent {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* Number markers */
+  .nm {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+  }
+
+  /* Disclaimer ribbon */
+  .ribbon {
+    background: rgba(201,163,90,0.06);
+    border-top: 1px solid rgba(201,163,90,0.18);
+    border-bottom: 1px solid rgba(201,163,90,0.18);
+  }
+
+  /* Anti-slop text strikethrough */
+  .strike {
+    position: relative;
+    color: rgba(243,234,221,0.45);
+  }
+  .strike::after {
+    content: "";
+    position: absolute; left: -2%; right: -2%; top: 52%;
+    height: 1px; background: rgba(201,163,90,0.7);
+    transform-origin: left;
+  }
+
+  /* Hero brand lockup — the signature: triangle mark above the wordmark */
+  .hero-mark { display: block; margin-bottom: 1.05rem; }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    line-height: 1;
+    font-size: clamp(38px, 8.5vw, 112px);
+    color: var(--ink);
+  }
+
+  @media (max-width: 640px) {
+    .hero-title { font-size: clamp(30px, 9vw, 58px) !important; letter-spacing: 0.13em; }
+    .hero-mark { width: 58px; height: 58px; margin-bottom: 0.8rem; }
+  }
+</style>
+<!-- Plausible analytics -->
+<script async src="https://plausible.io/js/pa-h4cO0vpBy-TIQBp-gSbyx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+</head>
+<body class="bg-bg text-ink">
+
+<div class="grain"></div>
+
+<!-- ============== NAV ============== -->
+<header class="fixed top-0 left-0 right-0 z-50">
+  <div class="backdrop-blur-md bg-bg/40 border-b border-white/5">
+    <nav class="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
+      <a href="#top" class="mark">
+        <svg class="logo-mark" width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <!-- inner concentric triangle (gold, sits inside the frame) -->
+          <path d="M16 9.2 L24.4 24 L7.6 24 Z" stroke="#c9a35a" stroke-width="0.9" fill="none" opacity="0.9"/>
+          <!-- wine wedge revealed by the chamfered bottom-left corner -->
+          <path d="M3 27.5 L12.6 27.5 L7.6 18.3 Z" fill="#6b1220"/>
+          <!-- outer triangle frame, bottom-left corner chamfered to expose the wedge -->
+          <path d="M16 3 L29 27.5 L12.6 27.5 L7.6 18.3 Z" stroke="#f3eadd" stroke-width="1.15" fill="none" stroke-linejoin="miter"/>
+        </svg>
+        <span class="mark-glyph tracking-[0.22em] text-[15px] uppercase">Dionysia</span>
+      </a>
+      <div class="hidden md:flex items-center gap-10 text-[12px] tracking-[0.2em] uppercase text-ink-mute">
+        <a href="#problem" class="hover:text-ink transition-colors">Premise</a>
+        <a href="#what" class="hover:text-ink transition-colors">Platform</a>
+        <a href="#manifesto" class="hover:text-ink transition-colors">Manifesto</a>
+        <a href="#creators" class="hover:text-ink transition-colors">Creators</a>
+      </div>
+      <div class="hidden md:flex items-center gap-7">
+        <a href="discover.html" class="text-[12px] tracking-[0.2em] uppercase text-ink-mute hover:text-ink transition-colors">
+          Enter the theatre <span class="ml-1">↗</span>
+        </a>
+        <a href="#creators" class="text-[12px] tracking-[0.2em] uppercase text-gold hover:text-gold-soft transition-colors">
+          Apply <span class="ml-2">→</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section id="top" class="relative min-h-[100svh] flex flex-col overflow-hidden">
+  <div class="mesh"></div>
+  <div class="vignette"></div>
+  <div id="sparks" class="absolute inset-0 z-[2] pointer-events-none"></div>
+
+  <div class="relative z-10 flex-1 flex flex-col justify-center px-6 md:px-10 max-w-7xl mx-auto w-full pt-28 pb-24">
+
+    <div class="reveal eyebrow mb-10" style="--rd:100ms">
+      <span class="sec-label">Now in early validation · MMXXVI</span>
+    </div>
+
+    <div class="hero-lockup reveal" style="--rd:200ms">
+      <svg class="hero-mark" width="84" height="84" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 9.2 L24.4 24 L7.6 24 Z" stroke="#c9a35a" stroke-width="0.9" fill="none" opacity="0.9"/>
+        <path d="M3 27.5 L12.6 27.5 L7.6 18.3 Z" fill="#6b1220"/>
+        <path d="M16 3 L29 27.5 L12.6 27.5 L7.6 18.3 Z" stroke="#f3eadd" stroke-width="1.15" fill="none" stroke-linejoin="miter"/>
+      </svg>
+      <h1 class="hero-title">Dionysia</h1>
+    </div>
+
+    <div class="reveal mt-10 max-w-2xl" style="--rd:400ms">
+      <p class="font-serif italic text-2xl md:text-3xl leading-snug text-ink/90">
+        A home for the cinema being made when AI meets craft.
+      </p>
+    </div>
+
+    <p class="reveal mt-6 max-w-xl text-ink-mute text-base md:text-lg leading-relaxed" style="--rd:550ms">
+      A curated streaming &amp; discovery platform for filmmakers using AI alongside real storytelling, music, and visual imagination — shorts, series, features, worldbuilding. Curation, not algorithm sludge.
+    </p>
+
+    <div class="reveal mt-12 flex flex-wrap items-center gap-4" style="--rd:700ms">
+      <a href="#creators" class="btn btn-primary">
+        Apply as a Creator <span class="arrow">→</span>
+      </a>
+      <a href="discover.html" class="btn btn-ghost md:hidden">
+        Enter the theatre <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="reveal mt-16 flex items-center gap-5 text-ink-dim text-[11px] tracking-[0.25em] uppercase" style="--rd:850ms">
+      <span class="scroll-cue"></span>
+      <span>Scroll — the premise follows</span>
+    </div>
+  </div>
+
+  <!-- Subtle bottom marquee tags -->
+  <div class="relative z-10 ribbon py-3 overflow-hidden">
+    <div class="marquee text-[11px] tracking-[0.35em] uppercase text-ink-mute">
+      <div class="flex gap-16 shrink-0">
+        <span>Cinematic AI</span><span class="text-gold">·</span>
+        <span>Pro-Craft</span><span class="text-gold">·</span>
+        <span>Anti-Slop</span><span class="text-gold">·</span>
+        <span>Shorts · Series · Features</span><span class="text-gold">·</span>
+        <span>Transparent Credits</span><span class="text-gold">·</span>
+        <span>Worldbuilding</span><span class="text-gold">·</span>
+        <span>Music Videos</span><span class="text-gold">·</span>
+        <span>Experimental</span><span class="text-gold">·</span>
+      </div>
+      <div class="flex gap-16 shrink-0" aria-hidden="true">
+        <span>Cinematic AI</span><span class="text-gold">·</span>
+        <span>Pro-Craft</span><span class="text-gold">·</span>
+        <span>Anti-Slop</span><span class="text-gold">·</span>
+        <span>Shorts · Series · Features</span><span class="text-gold">·</span>
+        <span>Transparent Credits</span><span class="text-gold">·</span>
+        <span>Worldbuilding</span><span class="text-gold">·</span>
+        <span>Music Videos</span><span class="text-gold">·</span>
+        <span>Experimental</span><span class="text-gold">·</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PROBLEM ============== -->
+<section id="problem" class="relative py-32 md:py-44 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-12 gap-10 md:gap-16">
+      <div class="md:col-span-4 reveal">
+        <div class="eyebrow mb-6"><span class="sec-label">I · The Premise</span></div>
+        <p class="nm">i.</p>
+      </div>
+      <div class="md:col-span-8 reveal" style="--rd:150ms">
+        <h2 class="display text-4xl md:text-6xl mb-10">
+          The serious work is <em class="title-accent">drowning</em> in slop.
+        </h2>
+        <div class="space-y-6 text-lg md:text-xl leading-relaxed text-ink/80 max-w-2xl font-light">
+          <p>
+            A short film took eight months. A music video, three. A worldbuilding series, a year of obsession. Then it lands in the same feed as a thousand prompt-spun celebrity fights and looping uncanny faces.
+          </p>
+          <p>
+            Today's platforms can't tell the difference between craft and noise — and they don't try. Algorithms reward whatever moves fastest. The slop wins on volume. The artists lose on signal.
+          </p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 gap-6 max-w-2xl">
+          <div class="pillar">
+            <p class="text-xs tracking-[0.25em] uppercase text-gold mb-2">Not for</p>
+            <p class="font-serif italic text-xl strike">AI celebrity fight reels</p>
+            <p class="font-serif italic text-xl strike">Five-second prompt loops</p>
+            <p class="font-serif italic text-xl strike">Looping uncanny faces</p>
+          </div>
+          <div class="pillar" style="border-left-color: rgba(201,163,90,0.4);">
+            <p class="text-xs tracking-[0.25em] uppercase text-gold mb-2">Made for</p>
+            <p class="font-serif italic text-xl">Cinematic shorts &amp; features</p>
+            <p class="font-serif italic text-xl">Multi-season AI series</p>
+            <p class="font-serif italic text-xl">Worldbuilding &amp; music video</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule max-w-6xl mx-auto"></div>
+
+<!-- ============== WHAT IT IS ============== -->
+<section id="what" class="relative py-32 md:py-44 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-12 gap-10 md:gap-16 mb-16 md:mb-24">
+      <div class="md:col-span-4 reveal">
+        <div class="eyebrow mb-6"><span class="sec-label">II · The Platform</span></div>
+        <p class="nm">ii.</p>
+      </div>
+      <div class="md:col-span-8 reveal" style="--rd:150ms">
+        <h2 class="display text-4xl md:text-6xl">
+          A theatre, not a <em class="title-accent">timeline</em>.
+        </h2>
+        <p class="mt-6 text-lg text-ink-mute max-w-2xl">
+          Three things, done seriously. Built around the work, not the scroll.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <!-- Card 1 -->
+      <article class="card reveal" style="--rd:100ms">
+        <div class="flex items-center justify-between mb-10">
+          <span class="card-num">— 01</span>
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <circle cx="18" cy="18" r="16" stroke="#c9a35a" stroke-width="0.7" opacity="0.5"/>
+            <path d="M14 12 L25 18 L14 24 Z" fill="#c9a35a" opacity="0.85"/>
+          </svg>
+        </div>
+        <h3 class="display text-3xl md:text-[34px] mb-4 leading-tight">
+          A curated library.
+        </h3>
+        <p class="text-ink-mute leading-relaxed text-[15px]">
+          Every project is reviewed by humans who have made things themselves. Nothing low-effort gets in. What's inside is what you'd actually want to watch — at full attention, on a real screen.
+        </p>
+        <div class="mt-8 pt-6 border-t border-white/5 text-[11px] tracking-[0.22em] uppercase text-gold/80">
+          Curation · Editorial · Human review
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="card reveal" style="--rd:220ms">
+        <div class="flex items-center justify-between mb-10">
+          <span class="card-num">— 02</span>
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="4" y="4" width="28" height="28" stroke="#c9a35a" stroke-width="0.7" opacity="0.5"/>
+            <path d="M9 18 H27 M18 9 V27" stroke="#c9a35a" stroke-width="0.7" opacity="0.7"/>
+            <circle cx="18" cy="18" r="4" fill="#c9a35a" opacity="0.85"/>
+          </svg>
+        </div>
+        <h3 class="display text-3xl md:text-[34px] mb-4 leading-tight">
+          Transparent AI credits.
+        </h3>
+        <p class="text-ink-mute leading-relaxed text-[15px]">
+          A clear, honest record on every project: what was written, shot, composed, modeled, generated, and refined — and by whom. No shame about using AI. No pretending you didn't.
+        </p>
+        <div class="mt-8 pt-6 border-t border-white/5 text-[11px] tracking-[0.22em] uppercase text-gold/80">
+          Honesty · Authorship · Process
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="card reveal" style="--rd:340ms">
+        <div class="flex items-center justify-between mb-10">
+          <span class="card-num">— 03</span>
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="3" y="10" width="8" height="16" stroke="#c9a35a" stroke-width="0.7" opacity="0.55"/>
+            <rect x="14" y="6" width="8" height="24" stroke="#c9a35a" stroke-width="0.7" opacity="0.85"/>
+            <rect x="25" y="13" width="8" height="10" stroke="#c9a35a" stroke-width="0.7" opacity="0.4"/>
+            <circle cx="18" cy="18" r="2" fill="#c9a35a"/>
+          </svg>
+        </div>
+        <h3 class="display text-3xl md:text-[34px] mb-4 leading-tight">
+          Built for the long form.
+        </h3>
+        <p class="text-ink-mute leading-relaxed text-[15px]">
+          Shorts, music videos, multi-season series, feature concepts, and worlds you can return to. Designed for work that wants more than fifteen seconds — and rewards the people making it.
+        </p>
+        <div class="mt-8 pt-6 border-t border-white/5 text-[11px] tracking-[0.22em] uppercase text-gold/80">
+          Series · Features · Worlds
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============== MANIFESTO ============== -->
+<section id="manifesto" class="manifesto-bg relative py-36 md:py-56 px-6 md:px-10 overflow-hidden">
+  <div class="relative max-w-6xl mx-auto">
+
+    <div class="text-center reveal">
+      <div class="eyebrow mb-2 inline-block">III · A Title Card</div>
+      <p class="font-serif italic text-ink-mute text-lg mt-1">— what we stand for —</p>
+    </div>
+
+    <div class="mt-20 md:mt-28 text-center space-y-3 md:space-y-5">
+      <p class="reveal display text-[clamp(36px,7vw,88px)]" style="--rd:100ms">
+        <span class="manifesto-line">The artists are <em class="title-accent">not</em> the slop.</span>
+      </p>
+      <p class="reveal display text-[clamp(36px,7vw,88px)]" style="--rd:200ms">
+        <span class="manifesto-line">Craft, not the prompt, is the work.</span>
+      </p>
+      <p class="reveal display text-[clamp(36px,7vw,88px)]" style="--rd:300ms">
+        <span class="manifesto-line">Honesty about how, pride in <em class="title-accent">what</em>.</span>
+      </p>
+      <p class="reveal display text-[clamp(36px,7vw,88px)]" style="--rd:400ms">
+        <span class="manifesto-line">Pro-human. Pro-AI. Anti-spam.</span>
+      </p>
+      <p class="reveal display text-[clamp(36px,7vw,88px)]" style="--rd:500ms">
+        <span class="manifesto-line">Transformation, with <em class="title-accent">intent</em>.</span>
+      </p>
+    </div>
+
+    <div class="reveal mt-20 md:mt-28 text-center" style="--rd:700ms">
+      <div class="rule mx-auto max-w-xs mb-6"></div>
+      <p class="font-serif italic text-ink-mute text-lg">— Dionysia —</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOR CREATORS ============== -->
+<section id="creators" class="relative py-32 md:py-44 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-12 gap-10 md:gap-20 items-start">
+      <div class="md:col-span-5 reveal">
+        <div class="eyebrow mb-6"><span class="sec-label">IV · For Creators</span></div>
+        <h2 class="display text-4xl md:text-6xl mb-8 leading-[0.95]">
+          If the work is <em class="title-accent">serious</em>, we want to see it.
+        </h2>
+        <p class="text-ink-mute text-lg leading-relaxed max-w-md mb-8">
+          We're opening to a small first cohort of cinematic AI filmmakers — directors, worldbuilders, music video artists, experimentalists. Apply with what you've made or what you're making.
+        </p>
+        <ul class="space-y-3 text-[15px] text-ink/80 max-w-md">
+          <li class="flex items-start gap-3"><span class="text-gold mt-[6px]">◆</span><span>Fair recognition for strong ideas, not engagement bait.</span></li>
+          <li class="flex items-start gap-3"><span class="text-gold mt-[6px]">◆</span><span>Transparent AI credits. Use what you use, proudly.</span></li>
+          <li class="flex items-start gap-3"><span class="text-gold mt-[6px]">◆</span><span>Distribution alongside other people doing the real work.</span></li>
+        </ul>
+      </div>
+
+      <div class="md:col-span-7 md:pl-8 reveal" style="--rd:200ms">
+        <div class="border border-white/10 rounded-sm p-8 md:p-12 backdrop-blur-sm" style="background: linear-gradient(180deg, rgba(30,16,18,0.4), rgba(15,8,10,0.4));">
+          <p class="eyebrow mb-2">Creator Application</p>
+          <p class="font-serif italic text-ink-mute mb-8">— rolling, small cohorts —</p>
+
+          <div class="form-stack" id="creator-stack">
+            <form class="form-inner space-y-7" id="creator-form" novalidate
+                  action="https://formsubmit.co/ajax/kanishtuteja@gmail.com" method="POST">
+              <input type="hidden" name="_subject" value="DIONYSIA — New filmmaker application">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+              <div>
+                <label class="text-[11px] tracking-[0.22em] uppercase text-ink-dim block mb-1" for="cf-name">Name / Alias</label>
+                <input id="cf-name" name="Name" required class="field" placeholder="Maya Aristidou" />
+              </div>
+              <div>
+                <label class="text-[11px] tracking-[0.22em] uppercase text-ink-dim block mb-1" for="cf-email">Email</label>
+                <input id="cf-email" name="Email" type="email" required class="field" placeholder="you@studio.io" />
+              </div>
+              <div>
+                <label class="text-[11px] tracking-[0.22em] uppercase text-ink-dim block mb-1" for="cf-link">Reel or one project link</label>
+                <input id="cf-link" name="Reel or project link" class="field" placeholder="vimeo.com / youtube.com / portfolio" />
+              </div>
+              <div>
+                <label class="text-[11px] tracking-[0.22em] uppercase text-ink-dim block mb-1" for="cf-pitch">In one line, what are you making?</label>
+                <input id="cf-pitch" name="What they're making" class="field" placeholder="A four-part series set in a flooded archive…" />
+              </div>
+              <div class="pt-3">
+                <button type="submit" class="btn btn-primary w-full justify-center">
+                  Submit Application <span class="arrow">→</span>
+                </button>
+                <p class="mt-4 text-[11px] tracking-[0.18em] uppercase text-ink-dim text-center">
+                  We read everything. Replies are personal.
+                </p>
+              </div>
+            </form>
+
+            <div class="thanks">
+              <div class="h-full flex flex-col justify-center items-start">
+                <p class="eyebrow text-gold mb-4">Received</p>
+                <p class="display text-3xl md:text-4xl mb-3">Welcome to the antechamber.</p>
+                <p class="text-ink-mute max-w-md">A real human will read your application this week. If your work fits, we'll write back with the next step. Either way, thank you for taking us seriously.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule max-w-6xl mx-auto"></div>
+
+<!-- ============== FOR VIEWERS ============== -->
+<section id="viewers" class="relative py-32 md:py-44 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-12 gap-10 md:gap-20 items-start">
+      <div class="md:col-span-7 reveal order-2 md:order-1">
+        <div class="border border-white/10 rounded-sm p-8 md:p-12 backdrop-blur-sm" style="background: linear-gradient(180deg, rgba(20,14,18,0.4), rgba(10,6,8,0.4));">
+          <p class="eyebrow mb-2">Early Access · Waitlist</p>
+          <p class="font-serif italic text-ink-mute mb-8">— first screenings, by invitation —</p>
+
+          <div class="form-stack" id="viewer-stack">
+            <form class="form-inner" id="viewer-form" novalidate
+                  action="https://formsubmit.co/ajax/kanishtuteja@gmail.com" method="POST">
+              <input type="hidden" name="_subject" value="DIONYSIA — New viewer waitlist signup">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+              <div class="flex flex-col sm:flex-row gap-4 items-end">
+                <div class="flex-1 w-full">
+                  <label class="text-[11px] tracking-[0.22em] uppercase text-ink-dim block mb-1" for="vf-email">Your email</label>
+                  <input id="vf-email" name="Email" type="email" required class="field" placeholder="you@elsewhere.com" />
+                </div>
+                <button type="submit" class="btn btn-primary shrink-0">
+                  Reserve a Seat <span class="arrow">→</span>
+                </button>
+              </div>
+              <p class="mt-6 text-[12px] text-ink-dim leading-relaxed max-w-md">
+                Occasional letters when something worth your time goes live. No autoplay, no infinite scroll, no daily push. Unsubscribe in one click.
+              </p>
+            </form>
+
+            <div class="thanks">
+              <div class="h-full flex flex-col justify-center items-start">
+                <p class="eyebrow text-gold mb-3">A seat is held</p>
+                <p class="display text-3xl mb-2">The lights are still down. We'll write before they come up.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-5 reveal order-1 md:order-2" style="--rd:150ms">
+        <div class="eyebrow mb-6"><span class="sec-label">V · For Viewers</span></div>
+        <h2 class="display text-4xl md:text-6xl mb-8 leading-[0.95]">
+          Watch with <em class="title-accent">attention</em> again.
+        </h2>
+        <p class="text-ink-mute text-lg leading-relaxed max-w-md mb-6">
+          A small, growing library of films, series, and worlds made by people who actually mean it. No infinite scroll. No autoplay. No swipe-through-the-feed.
+        </p>
+        <p class="text-ink-mute text-lg leading-relaxed max-w-md">
+          Sit down. Stay a while. Trust that someone vetted what you're about to see.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="relative pt-24 pb-12 px-6 md:px-10 border-t border-white/5">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
+      <div>
+        <div class="mark mb-3">
+          <svg class="logo-mark logo-mark--lg" width="40" height="40" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 9.2 L24.4 24 L7.6 24 Z" stroke="#c9a35a" stroke-width="0.85" fill="none" opacity="0.9"/>
+            <path d="M3 27.5 L12.6 27.5 L7.6 18.3 Z" fill="#6b1220"/>
+            <path d="M16 3 L29 27.5 L12.6 27.5 L7.6 18.3 Z" stroke="#f3eadd" stroke-width="1.1" fill="none" stroke-linejoin="miter"/>
+          </svg>
+          <span class="display text-3xl tracking-[0.06em]">Dionysia</span>
+        </div>
+        <p class="font-serif italic text-ink-mute text-lg max-w-md">
+          From <span class="text-gold">Dionysus</span> — god of transformation, theatre, and ecstatic imagination.
+        </p>
+      </div>
+
+      <div class="text-left md:text-right">
+        <p class="text-[11px] tracking-[0.25em] uppercase text-ink-dim mb-1">MMXXVI</p>
+        <p class="text-[11px] tracking-[0.25em] uppercase text-gold/80">An early-stage concept · in validation</p>
+      </div>
+    </div>
+
+    <div class="rule mt-12 mb-6"></div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] tracking-[0.22em] uppercase text-ink-dim">
+      <span>© 2026 Dionysia</span>
+      <span class="font-serif italic normal-case tracking-normal text-ink-mute text-base">— Pro-human. Pro-AI. Anti-slop. —</span>
+      <a href="brand-bumper.html?embed=1" class="hover:text-gold transition-colors">▷ Opening titles</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============== JS ============== -->
+<script>
+  // Reveal-on-scroll
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Sparks — very few, very slow, only in hero
+  (function sparks() {
+    const root = document.getElementById('sparks');
+    if (!root) return;
+    const COUNT = 14;
+    for (let i = 0; i < COUNT; i++) {
+      const s = document.createElement('span');
+      s.className = 'spark';
+      const x = Math.random() * 100;
+      const y = 40 + Math.random() * 60;
+      const dur = 9 + Math.random() * 10;
+      const delay = Math.random() * 14;
+      s.style.left = x + '%';
+      s.style.top = y + '%';
+      s.style.animationDuration = dur + 's';
+      s.style.animationDelay = (-delay) + 's';
+      s.style.transform = `scale(${0.6 + Math.random() * 1.2})`;
+      root.appendChild(s);
+    }
+  })();
+
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length < 2) return;
+      const t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Forms — POST to FormSubmit, then show thanks state
+  function wireForm(formId, stackId) {
+    const form = document.getElementById(formId);
+    const stack = document.getElementById(stackId);
+    if (!form || !stack) return;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      // basic validity check
+      const required = form.querySelectorAll('[required]');
+      let ok = true;
+      required.forEach(input => {
+        if (!input.value.trim() || (input.type === 'email' && !/.+@.+\..+/.test(input.value))) {
+          input.style.borderBottomColor = '#8b1a2b';
+          ok = false;
+        } else {
+          input.style.borderBottomColor = '';
+        }
+      });
+      if (!ok) return;
+      // Honeypot — silently succeed if filled
+      const honey = form.querySelector('input[name="_honey"]');
+      if (honey && honey.value) { stack.classList.add('sent'); return; }
+      // Actual POST
+      const submitBtn = form.querySelector('button[type="submit"], button:not([type])');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; }
+      try {
+        const data = new FormData(form);
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          stack.classList.add('sent');
+        } else {
+          // Show thanks anyway — better UX than failing visibly. Email may still arrive.
+          stack.classList.add('sent');
+          console.warn('Form submit returned', res.status);
+        }
+      } catch (err) {
+        // Network error — still show thanks, log silently
+        stack.classList.add('sent');
+        console.warn('Form submit network error', err);
+      }
+    });
+  }
+  wireForm('creator-form', 'creator-stack');
+  wireForm('viewer-form', 'viewer-stack');
+</script>
+
+</body>
+</html>

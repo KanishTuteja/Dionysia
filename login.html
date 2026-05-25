@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dionysia — Sign in</title>
+<meta name="description" content="Members-only screening room. Enter your email to receive a sign-in link." />
+<meta name="theme-color" content="#0a0707" />
+
+<!-- Favicon — same SVG mark as coming-soon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+<!-- Plausible analytics -->
+<script async src="https://plausible.io/js/pa-h4cO0vpBy-TIQBp-gSbyx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0707;
+    --bg-soft:#120c0c;
+    --line:#1f1716;
+    --ink:#f3eadd;
+    --ink-mute:#a99c8c;
+    --ink-dim:#6f6457;
+    --gold:#c9a35a;
+    --gold-soft:#e0c386;
+    --gold-deep:#8a6f37;
+    --wine:#6b1220;
+    --wine-glow:#8b1a2b;
+  }
+  html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+  body{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100vh;padding:2em 1.4em;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 30%, rgba(201,163,90,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 80%, rgba(107,18,32,0.10) 0%, transparent 70%),
+      var(--bg);
+    position:relative;overflow-x:hidden;
+  }
+  /* Subtle grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:0.05;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+    mix-blend-mode:overlay;
+  }
+
+  .stage{width:100%;max-width:440px;text-align:center;position:relative;z-index:1}
+
+  .logo{display:flex;justify-content:center;margin-bottom:2em}
+  .logo svg{width:54px;height:54px}
+
+  .wordmark{
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    font-size:clamp(36px,7vw,48px);letter-spacing:0.18em;
+    color:var(--ink);margin-bottom:0.6em;
+  }
+  .tagline{
+    font-size:11px;letter-spacing:0.32em;text-transform:uppercase;
+    color:var(--ink-dim);margin-bottom:3em;
+  }
+
+  .panel{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.005));
+    padding:2.4em 1.8em;border-radius:6px;
+    box-shadow:0 30px 80px -40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(243,234,221,0.03);
+  }
+
+  .eyebrow{
+    font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:1em;
+  }
+
+  .prompt{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+    font-size:18px;line-height:1.5;color:var(--ink-mute);
+    margin-bottom:2em;
+  }
+
+  .form{display:flex;flex-direction:column;gap:1.4em}
+
+  .field{
+    width:100%;
+    background:transparent;border:none;
+    border-bottom:1px solid var(--ink-dim);
+    color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;
+    font-size:16px;padding:0.7em 0.2em;
+    text-align:center;letter-spacing:0.04em;
+    transition:border-color 200ms ease;
+  }
+  .field::placeholder{color:var(--ink-dim);font-style:italic;letter-spacing:0.08em}
+  .field:focus{outline:none;border-bottom-color:var(--gold)}
+  .field.err{border-bottom-color:var(--wine-glow)}
+
+  /* Kill browser autofill's white/yellow background — keep the field truly transparent
+     so it inherits whatever's behind it (panel gradient). The huge transition delay
+     prevents Chrome from ever painting the autofill background color. */
+  .field:-webkit-autofill,
+  .field:-webkit-autofill:hover,
+  .field:-webkit-autofill:focus,
+  .field:-webkit-autofill:active{
+    -webkit-text-fill-color: var(--ink) !important;
+    caret-color: var(--gold) !important;
+    transition: background-color 600000s 0s, color 600000s 0s !important;
+    -webkit-background-clip: text !important;
+            background-clip: text !important;
+  }
+  /* Firefox autofill */
+  .field:autofill{
+    background: transparent !important;
+    color: var(--ink) !important;
+  }
+
+  .submit{
+    background:transparent;border:1px solid var(--gold);
+    color:var(--gold);font-family:'Inter',sans-serif;font-weight:400;
+    font-size:11px;letter-spacing:0.32em;text-transform:uppercase;
+    padding:1em 1.6em;cursor:pointer;border-radius:2px;
+    transition:all 220ms ease;margin-top:0.4em;
+  }
+  .submit:hover{background:var(--gold);color:var(--bg)}
+  .submit:disabled{opacity:0.4;cursor:wait}
+
+  .msg{
+    margin-top:1.4em;font-size:13px;line-height:1.6;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    min-height:1.4em;
+  }
+  .msg.ok{color:var(--gold-soft)}
+  .msg.err{color:var(--wine-glow)}
+
+  .footnote{
+    margin-top:2.4em;font-size:11px;letter-spacing:0.04em;
+    color:var(--ink-dim);line-height:1.6;
+  }
+  .footnote a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,163,90,0.3)}
+  .footnote a:hover{color:var(--gold-soft);border-bottom-color:var(--gold-soft)}
+
+  /* Sent state */
+  .stage.sent .form{display:none}
+  .stage.sent .prompt{display:none}
+  .stage.sent .eyebrow{color:var(--gold-soft)}
+  .stage .sent-state{display:none}
+  .stage.sent .sent-state{display:block;text-align:left}
+  .sent-state h2{
+    font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;
+    line-height:1.3;color:var(--ink);margin-bottom:0.8em;
+    text-align:center;
+  }
+  .sent-state p{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;
+    line-height:1.6;color:var(--ink-mute);text-align:center;margin-bottom:1.4em;
+  }
+  .sent-state .small{
+    font-family:'Inter',sans-serif;font-style:normal;font-size:11px;
+    letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);
+    text-align:center;
+  }
+
+  .closing{
+    margin-top:3em;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:13px;color:var(--ink-dim);letter-spacing:0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <div class="logo">
+    <!-- Three-triangle Dionysia mark -->
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+      <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+      <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+    </svg>
+  </div>
+
+  <div class="wordmark">DIONYSIA</div>
+  <div class="tagline">Members-only screening room</div>
+
+  <div class="panel">
+    <div class="eyebrow" id="eyebrow">Sign in</div>
+    <div class="prompt">Enter the email you were invited with. We'll send a one-time link.</div>
+
+    <form class="form" id="loginForm" novalidate>
+      <input class="field" type="email" id="email" name="email" placeholder="you@yourcinema.com" autocomplete="email" required aria-label="Your email address" />
+      <button class="submit" type="submit" id="submit">Send my link</button>
+    </form>
+
+    <div class="msg" id="msg"></div>
+
+    <div class="sent-state">
+      <h2>Check your inbox.</h2>
+      <p>We sent a sign-in link to <span id="sent-email" style="color:var(--gold-soft);font-style:normal"></span>. Open it from this device. The link expires in 60 minutes.</p>
+      <div class="small">No email after 2 minutes? Check spam, or <a href="#" onclick="location.reload();return false;" style="color:var(--gold);">try again</a>.</div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    Not invited yet? Founding-filmmaker spots are by introduction only.<br>
+    <a href="mailto:kanishtuteja@gmail.com">Reach out</a> if a curator referred you.
+  </div>
+
+  <div class="closing">"The reel is hand-set, frame by frame."</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ============ SUPABASE CONFIG ============
+  const SUPABASE_URL  = "https://zjdraojepoaajgwrstkj.supabase.co";
+  const SUPABASE_ANON = "sb_publishable_bCodjhel8DZq00LRRApvWA_xamIhN_F";
+  const REDIRECT_TO   = window.location.origin + "/auth-callback.html";
+  // =========================================
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  const $ = (id) => document.getElementById(id);
+  const stage  = $('stage');
+  const form   = $('loginForm');
+  const email  = $('email');
+  const submit = $('submit');
+  const msg    = $('msg');
+
+  // If already signed in, skip login → discover
+  (async () => {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        location.replace('/discover.html');
+      }
+    } catch(e) { /* fall through */ }
+  })();
+
+  function setMsg(text, kind){
+    msg.textContent = text || '';
+    msg.className = 'msg' + (kind ? ' ' + kind : '');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const value = (email.value || '').trim().toLowerCase();
+    email.classList.remove('err');
+    setMsg('');
+
+    if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      email.classList.add('err');
+      setMsg('That email doesn’t look right. Try again.', 'err');
+      return;
+    }
+
+    submit.disabled = true;
+    submit.textContent = 'Sending…';
+
+    try {
+      const { error } = await sb.auth.signInWithOtp({
+        email: value,
+        options: {
+          emailRedirectTo: REDIRECT_TO,
+          shouldCreateUser: true
+        }
+      });
+      if (error) throw error;
+      $('sent-email').textContent = value;
+      stage.classList.add('sent');
+      $('eyebrow').textContent = 'Link sent';
+    } catch (err) {
+      console.error(err);
+      submit.disabled = false;
+      submit.textContent = 'Send my link';
+      setMsg('We couldn’t send the link right now. Try again, or email kanishtuteja@gmail.com.', 'err');
+    }
+  });
+</script>
+</body>
+</html>
