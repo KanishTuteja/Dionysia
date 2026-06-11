@@ -172,17 +172,19 @@
     "status": "coming"
   },
   {
-    "id": "tba-2",
-    "slug": "tba-2",
-    "title": "Coming Soon",
-    "director": "—",
+    "id": "naia",
+    "slug": "naia",
+    "title": "NAIÁ",
+    "director": "Anderson Freitas",
     "year": 2026,
+    "runtime": 6,
     "format": "short",
     "synopsis": "",
-    "posterUrl": null,
-    "heroUrl": null,
-    "muxPlaybackId": null,
-    "status": "coming"
+    "directorStatement": "",
+    "posterUrl": "/assets/films/naia/poster.jpg",
+    "heroUrl": "/assets/films/naia/hero.jpg",
+    "muxPlaybackId": "gxr1ZvelPR4MJf5mc01JZCreD88s4MdgSPZWsvqYIQSQ",
+    "status": "live"
   },
   {
     "id": "tba-3",
@@ -198,16 +200,18 @@
     "status": "coming"
   },
   {
-    "id": "tba-4",
-    "slug": "tba-4",
-    "title": "Coming Soon",
-    "director": "—",
+    "id": "life-swing-again",
+    "slug": "life-swing-again",
+    "title": "Life, Swing, Again",
+    "director": "Hyung-rae Cho",
     "year": 2026,
+    "runtime": 11,
     "format": "short",
     "synopsis": "",
-    "posterUrl": null,
-    "heroUrl": null,
-    "muxPlaybackId": null,
-    "status": "coming"
+    "directorStatement": "",
+    "posterUrl": "/assets/films/life-swing-again/poster.jpg",
+    "heroUrl": "/assets/films/life-swing-again/hero.jpg",
+    "muxPlaybackId": "OUvIHXC01ooLlMQR0000801H7yJqwqghh00STLWxUI1RkPC8",
+    "status": "live"
   }
 ]
