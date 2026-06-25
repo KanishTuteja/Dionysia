@@ -1,0 +1,9 @@
+# Internal — keep off the public web deploy (no secrets in them, but no need to serve)
+supabase/
+MEMBERSHIP-SETUP.md
+
+# Local dev
+.claude/
+deploy-test.bat
+supabase-test.html
+*.jsx

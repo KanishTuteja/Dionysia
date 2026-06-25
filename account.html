@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<title>Dionysia — Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: { DEFAULT: '#f3eadd', mute: '#a99c8c', dim: '#6f6457' },
+          bg:  { DEFAULT: '#0a0707', elev: '#120c0c', card: '#15100f', line: '#1f1716' },
+          wine:{ DEFAULT: '#6b1220', deep: '#3d0a13', glow: '#8b1a2b' },
+          gold:{ DEFAULT: '#c9a35a', soft: '#e0c386', deep: '#8a6f37' },
+        },
+        fontFamily: {
+          serif: ['"Cormorant Garamond"', 'serif'],
+          sans:  ['Inter', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  :root { --bg:#0a0707; --ink:#f3eadd; --gold:#c9a35a; --gold-soft:#e0c386; --wine:#6b1220; --wine-deep:#3d0a13; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+  .font-serif { font-family: 'Cormorant Garamond', serif; }
+  .display { font-family: 'Cormorant Garamond', serif; font-weight: 500; letter-spacing: -0.005em; }
+  .eyebrow {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    font-size: 11px; color: var(--gold);
+  }
+  .label {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    font-size: 10.5px; color: var(--ink); opacity: 0.7;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
+    opacity: 0.06; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.07 0 0 0 0 0.05 0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  ::selection { background: rgba(201,163,90,0.35); color: #fff; }
+
+  /* Nav (matched) */
+  .nav-pill {
+    padding: 7px 14px; border-radius: 2px;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(243,234,221,0.6);
+    transition: color .3s, background .3s;
+  }
+  .nav-pill:hover { color: var(--ink); }
+  .nav-pill--active { color: var(--gold); }
+
+  /* Account sidebar */
+  .acct-sidebar {
+    width: 320px; flex-shrink: 0;
+    border-right: 1px solid rgba(243,234,221,0.06);
+    padding: 36px 26px 36px 36px;
+    background: linear-gradient(180deg, rgba(20,14,14,0.55), rgba(10,7,7,0.0));
+  }
+  .acct-avatar {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(140deg, #6b1220, #3d0a13);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; color: #e0c386;
+    border: 1px solid rgba(201,163,90,0.5);
+    box-shadow: 0 0 0 3px rgba(201,163,90,0.06), 0 12px 28px -16px rgba(107,18,32,0.7);
+    flex-shrink: 0;
+  }
+  .acct-divider { height: 1px; background: rgba(243,234,221,0.07); margin: 22px 0; }
+
+  .acct-add {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 4px;
+    border-radius: 2px;
+    color: var(--ink);
+    transition: color .25s;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 14.5px;
+  }
+  .acct-add:hover { color: var(--gold-soft); }
+  .acct-add .plus {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1px dashed rgba(201,163,90,0.45);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--gold-soft);
+    transition: border-color .25s, background .25s;
+    flex-shrink: 0;
+  }
+  .acct-add:hover .plus {
+    border-color: var(--gold);
+    background: rgba(201,163,90,0.07);
+  }
+
+  .acct-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 2px;
+    font-size: 14.5px;
+    color: rgba(243,234,221,0.78);
+    background: transparent;
+    border: none;
+    border-left: 1.5px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color .25s, background .25s, border-color .25s, padding .25s;
+  }
+  .acct-item:hover {
+    color: var(--ink);
+    background: rgba(243,234,221,0.025);
+    padding-left: 18px;
+  }
+  .acct-item.is-active {
+    color: var(--gold-soft);
+    background: linear-gradient(90deg, rgba(201,163,90,0.10), rgba(201,163,90,0));
+    border-left-color: var(--gold);
+    padding-left: 18px;
+  }
+  .acct-item.is-danger { color: rgba(243,234,221,0.55); }
+  .acct-item.is-danger:hover { color: #d97076; }
+
+  /* Main content */
+  .acct-main {
+    flex: 1;
+    padding: 56px 56px 96px 56px;
+    max-width: 980px;
+  }
+  .acct-card {
+    border: 1px solid rgba(243,234,221,0.07);
+    background: linear-gradient(180deg, rgba(21,16,15,0.7), rgba(15,11,11,0.7));
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .acct-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+    padding: 22px 28px;
+    border-bottom: 1px solid rgba(243,234,221,0.05);
+  }
+  .acct-row:last-child { border-bottom: none; }
+  .acct-row-label {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(243,234,221,0.55);
+    font-weight: 500;
+    flex-shrink: 0;
+    min-width: 180px;
+  }
+  .acct-row-value {
+    flex: 1;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .acct-row-value .sub {
+    color: rgba(243,234,221,0.55);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .lnk-edit {
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold-soft);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition: color .25s;
+    flex-shrink: 0;
+    padding: 4px 0;
+    font-family: inherit;
+  }
+  .lnk-edit:hover { color: var(--gold); }
+
+  /* Section heading inside main */
+  .sec-heading {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .sec-heading h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+  }
+  .sec-meta {
+    font-family: 'Inter', sans-serif;
+    color: rgba(243,234,221,0.55);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Plan badge */
+  .plan-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(201,163,90,0.18), rgba(201,163,90,0.04));
+    border: 1px solid rgba(201,163,90,0.4);
+    color: var(--gold-soft);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .plan-pill .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--gold-soft);
+    box-shadow: 0 0 8px rgba(224,195,134,0.7);
+  }
+
+  .toggle {
+    position: relative;
+    width: 38px; height: 22px;
+    border-radius: 999px;
+    background: rgba(243,234,221,0.1);
+    border: 1px solid rgba(243,234,221,0.12);
+    cursor: pointer;
+    transition: background .25s, border-color .25s;
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: ''; position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: rgba(243,234,221,0.85);
+    transition: transform .25s, background .25s;
+  }
+  .toggle.is-on {
+    background: linear-gradient(180deg, #d8b269, #b58a3f);
+    border-color: rgba(201,163,90,0.6);
+  }
+  .toggle.is-on::after { transform: translateX(15px); background: #1a0a0d; }
+
+  .device-row {
+    display: flex; align-items: center; gap: 18px;
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(243,234,221,0.05);
+  }
+  .device-row:last-child { border-bottom: none; }
+  .device-icon {
+    width: 36px; height: 36px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(243,234,221,0.1);
+    border-radius: 2px;
+    color: rgba(243,234,221,0.6);
+    flex-shrink: 0;
+  }
+
+  .profile-tile {
+    display: flex; align-items: center; gap: 18px;
+    padding: 18px;
+    border: 1px solid rgba(243,234,221,0.07);
+    border-radius: 3px;
+    background: rgba(21,16,15,0.5);
+    transition: border-color .25s, background .25s;
+    cursor: pointer;
+  }
+  .profile-tile:hover {
+    border-color: rgba(201,163,90,0.4);
+    background: rgba(21,16,15,0.85);
+  }
+  .pf-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    border: 1px solid rgba(201,163,90,0.3);
+    flex-shrink: 0;
+  }
+
+  .panel { display: none; }
+  .panel.is-active { display: block; animation: panelin .35s cubic-bezier(.2,.6,.2,1); }
+  @keyframes panelin {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .help-q {
+    border: 1px solid rgba(243,234,221,0.07);
+    background: rgba(21,16,15,0.5);
+    border-radius: 3px;
+    padding: 22px 26px;
+    cursor: pointer;
+    transition: border-color .25s, background .25s;
+  }
+  .help-q:hover { border-color: rgba(201,163,90,0.35); }
+  .help-q-q { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--ink); }
+  .help-q-a { color: rgba(243,234,221,0.6); font-size: 13.5px; line-height: 1.6; margin-top: 8px; display: none; }
+  .help-q.is-open .help-q-a { display: block; }
+  .help-q.is-open { border-color: rgba(201,163,90,0.4); background: rgba(21,16,15,0.85); }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .9s cubic-bezier(.2,.6,.2,1), transform .9s cubic-bezier(.2,.6,.2,1); transition-delay: var(--rd, 0ms); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* Mobile fallback */
+  @media (max-width: 900px) {
+    .acct-shell { flex-direction: column; }
+    .acct-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(243,234,221,0.06); padding: 28px; }
+    .acct-main { padding: 32px 24px 64px; }
+    .acct-row { flex-wrap: wrap; }
+    .acct-row-label { min-width: 0; flex-basis: 100%; }
+  }
+</style>
+<!-- Plausible analytics -->
+<script async src="https://plausible.io/js/pa-h4cO0vpBy-TIQBp-gSbyx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<!-- Auth gate -->
+<script src="gate.js"></script>
+<!-- Mobile nav -->
+<script src="mobile-nav.js" defer></script>
+<!-- Help widget -->
+<script src="help.js" defer></script>
+</head>
+<body class="bg-bg text-ink" data-screen-label="Account">
+
+<div class="grain"></div>
+
+<!-- ============== NAV ============== -->
+<header class="sticky top-0 z-50 backdrop-blur-md bg-bg/70 border-b border-white/5">
+  <nav class="pl-6 md:pl-12 lg:pl-16 pr-4 md:pr-5 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 9.2 L24.4 24 L7.6 24 Z" stroke="#c9a35a" stroke-width="0.9" fill="none" opacity="0.9"/>
+        <path d="M3 27.5 L12.6 27.5 L7.6 18.3 Z" fill="#6b1220"/>
+        <path d="M16 3 L29 27.5 L12.6 27.5 L7.6 18.3 Z" stroke="#f3eadd" stroke-width="1.15" fill="none" stroke-linejoin="miter"/>
+      </svg>
+      <span class="display tracking-[0.22em] text-[15px] uppercase">Dionysia</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2">
+      <a href="discover.html" class="nav-pill">Home</a>
+      <a href="movies.html" class="nav-pill">Movies</a>
+      <a href="series.html" class="nav-pill">Series</a>
+      <a href="shorts.html" class="nav-pill">Short Films</a>
+      <a href="watchlist.html" class="nav-pill">Watchlist</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:border-gold/50 transition-colors" aria-label="Search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f3eadd" stroke-width="1.5">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+      </button>
+      <button class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gold transition-colors overflow-hidden" aria-label="Account" style="background: linear-gradient(140deg, #6b1220, #3d0a13); box-shadow: 0 0 0 2px rgba(201,163,90,0.18);">
+        <span id="navAvatarInitial" style="font-family:'Cormorant Garamond',serif; color:#e0c386; font-size:14px; font-weight:500;">&middot;</span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ============== ACCOUNT SHELL ============== -->
+<div class="acct-shell flex items-stretch">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="acct-sidebar reveal">
+    <div class="flex items-center gap-3.5 mb-1">
+      <div class="acct-avatar" id="sideAvatarInitial">&middot;</div>
+      <div>
+        <p class="font-serif text-[20px] leading-tight" id="sideName">Member</p>
+        <p class="text-[11.5px] tracking-[0.18em] uppercase text-ink-mute mt-0.5" id="sideRole">Member</p>
+      </div>
+    </div>
+
+    <div class="acct-divider"></div>
+
+    <nav class="flex flex-col gap-0.5">
+      <a href="dashboard.html" class="acct-item flex items-center justify-between" style="text-decoration:none;">
+        <span>Creator dashboard</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="opacity:0.55;"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="discover.html" class="acct-item" style="text-decoration:none;">Back to viewing</a>
+    </nav>
+
+    <div class="acct-divider"></div>
+
+    <button class="acct-item is-danger" id="acct-logout">Log out</button>
+
+    <p class="mt-10 font-serif italic text-[13px] text-ink-dim leading-relaxed">
+      "Curation, not algorithm. The reel is hand-set, frame by frame."
+    </p>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="acct-main">
+
+    <!-- Post-payment welcome (shown only with ?welcome=1) -->
+    <div id="welcomeBanner" style="display:none; margin-bottom:30px; border:1px solid rgba(201,163,90,0.4); background:linear-gradient(180deg, rgba(201,163,90,0.10), rgba(201,163,90,0.02)); border-radius:4px; padding:22px 26px;">
+      <p class="eyebrow" style="margin-bottom:6px;">Payment received</p>
+      <p class="font-serif" style="font-size:26px; line-height:1.1;">Welcome to Dionysia. Your seat is ready.</p>
+      <p class="text-ink-mute" style="font-size:14px; margin-top:8px;">Your membership is activating — it’ll show below in a moment.</p>
+      <a href="discover.html" class="lnk-edit" style="display:inline-block; margin-top:16px;">Enter the theatre →</a>
+    </div>
+
+    <!-- =============== ACCOUNT (founding member) =============== -->
+    <section data-panel="account">
+      <div class="reveal mb-12" style="--rd:80ms">
+        <p class="eyebrow mb-3">Account</p>
+        <h1 class="display text-[56px] md:text-[72px] leading-[0.95] tracking-tight">Your seat<br>in the theatre.</h1>
+        <p class="font-serif italic text-ink-mute text-lg mt-4 max-w-md">— your founding seat at Dionysia, ahead of opening night —</p>
+      </div>
+
+      <!-- Founding member -->
+      <div class="reveal mb-10" style="--rd:160ms">
+        <div class="sec-heading">
+          <h3>Founding member</h3>
+          <span class="sec-meta">Dionysia · MMXXVI</span>
+        </div>
+        <div class="acct-card">
+          <div class="acct-row">
+            <span class="acct-row-label">Email</span>
+            <div class="acct-row-value" id="acctEmail">—</div>
+          </div>
+          <div class="acct-row">
+            <span class="acct-row-label">Membership</span>
+            <div class="acct-row-value">
+              <span class="plan-pill"><span class="dot"></span><span id="planPillText">Membership</span></span>
+              <p class="sub" id="planSub">Checking your membership…</p>
+            </div>
+            <button class="lnk-edit" id="manageBtn" style="display:none">Manage</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="reveal mb-10" style="--rd:240ms">
+        <div class="sec-heading">
+          <h3>Need something?</h3>
+          <span class="sec-meta">A real person replies</span>
+        </div>
+        <div class="acct-card">
+          <div class="acct-row">
+            <span class="acct-row-label">Contact</span>
+            <div class="acct-row-value">
+              <a href="mailto:kanishtuteja@gmail.com" class="text-ink hover:text-gold-soft transition-colors">kanishtuteja@gmail.com</a>
+              <p class="sub">Access, playback, your films — anything at all. Reach out directly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session -->
+      <div class="reveal" style="--rd:320ms">
+        <div class="sec-heading">
+          <h3 style="color:rgba(243,234,221,0.7);">Session</h3>
+        </div>
+        <div class="acct-card">
+          <div class="acct-row">
+            <span class="acct-row-label">Sign out</span>
+            <div class="acct-row-value">
+              End your session on this device.
+            </div>
+            <button class="lnk-edit" id="acct-logout-main">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="border-t border-white/5 py-8 px-6 md:px-10 mt-12">
+  <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] tracking-[0.22em] uppercase text-ink-dim">
+    <span>© 2026 Dionysia</span>
+    <div class="flex items-center gap-5">
+      <a href="brand-bumper.html" class="hover:text-gold transition-colors">▷ Opening titles</a>
+      <span class="opacity-30">·</span>
+      <a href="dashboard.html" class="hover:text-gold transition-colors">Creator dashboard</a>
+    </div>
+    <a href="discover.html" class="hover:text-gold transition-colors">Back to discover →</a>
+  </div>
+</footer>
+
+<script>
+  // ===== Reveal animation =====
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ===== Founder identity (from gate.js Supabase session) =====
+  // gate.js exposes the signed-in user on window.__dionysia_user and also
+  // fires a 'dionysia:session' event. We read whichever is ready.
+  function prettyFromEmail(email) {
+    const prefix = (String(email).split('@')[0] || '');
+    if (!prefix) return '';
+    return prefix
+      .split(/[._-]+/)
+      .filter(Boolean)
+      .map(s => s.charAt(0).toUpperCase() + s.slice(1))
+      .join(' ');
+  }
+
+  function hydrateIdentity() {
+    const user = window.__dionysia_user
+      || (window.__dionysia_session && window.__dionysia_session.user)
+      || null;
+    if (!user) return;
+
+    const email = (user.email || '').trim();
+    const meta  = user.user_metadata || {};
+    const name  = (meta.full_name || meta.name || '').trim();
+
+    // Initial — first letter of the real name, else of the email.
+    const initialSrc = name || email || '?';
+    const initial = (initialSrc.charAt(0) || '?').toUpperCase();
+
+    // Display name — real name, else a tidy version of the email handle.
+    const displayName = name || prettyFromEmail(email) || 'Founding Member';
+
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setText('navAvatarInitial', initial);
+    setText('sideAvatarInitial', initial);
+    setText('sideName', displayName);
+
+    const emailEl = document.getElementById('acctEmail');
+    if (emailEl) {
+      emailEl.textContent = '';
+      if (email) {
+        const a = document.createElement('a');
+        a.href = 'mailto:' + email;
+        a.textContent = email;
+        a.className = 'text-ink hover:text-gold-soft transition-colors';
+        emailEl.appendChild(a);
+      } else {
+        emailEl.textContent = '—';
+      }
+    }
+  }
+  hydrateIdentity();
+  document.addEventListener('dionysia:session', hydrateIdentity);
+
+  // ===== Log out (wired to gate.js dionysiaSignOut helper) =====
+  function wireSignOut(btn) {
+    if (!btn) return;
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      const original = btn.textContent;
+      btn.textContent = 'Signing out…';
+      try {
+        if (typeof window.dionysiaSignOut === 'function') {
+          await window.dionysiaSignOut();
+        } else {
+          location.replace('/login.html');
+        }
+      } catch (err) {
+        console.error('[logout] failed:', err);
+        location.replace('/login.html');
+      }
+    });
+  }
+  wireSignOut(document.getElementById('acct-logout'));
+  wireSignOut(document.getElementById('acct-logout-main'));
+
+  // ===== Membership status (subscriber vs comped founder) =====
+  const PORTAL_URL = 'https://zjdraojepoaajgwrstkj.supabase.co/functions/v1/create-portal';
+  const SB_ANON_KEY = 'sb_publishable_bCodjhel8DZq00LRRApvWA_xamIhN_F';
+  const _params = new URLSearchParams(location.search);
+  const justJoined = _params.get('welcome') === '1';
+  let membershipTries = 0;
+
+  function fmtDate(s){ if(!s) return ''; try{ return new Date(s).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}); }catch(_){ return ''; } }
+
+  async function openPortal(){
+    const sb = window.__dionysia_supabase;
+    const btn = document.getElementById('manageBtn');
+    if (!sb) return;
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { location.href = 'login.html'; return; }
+    btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Opening…';
+    try {
+      const res = await fetch(PORTAL_URL, { method:'POST', headers:{ 'Authorization':`Bearer ${session.access_token}`, 'apikey':SB_ANON_KEY, 'Content-Type':'application/json' }, body:'{}' });
+      const j = await res.json();
+      if (j.url) { location.href = j.url; return; }
+      btn.textContent = orig; btn.disabled = false;
+      alert('Could not open the billing portal right now. Please try again.');
+    } catch(e){ btn.textContent = orig; btn.disabled = false; alert('Network error opening billing portal.'); }
+  }
+
+  async function hydrateMembership(){
+    const sb = window.__dionysia_supabase; if (!sb) return;
+    const pillText  = document.getElementById('planPillText');
+    const subEl     = document.getElementById('planSub');
+    const manageBtn = document.getElementById('manageBtn');
+    const sideRole  = document.getElementById('sideRole');
+    let row = null;
+    try { const r = await sb.from('subscriptions').select('status, current_period_end, cancel_at_period_end').maybeSingle(); row = r.data; }
+    catch(e){ console.warn('[account] membership load failed', e); }
+
+    const active = row && ['active','trialing'].includes(row.status);
+    if (active) {
+      pillText.textContent = 'Founding Member';
+      if (sideRole) sideRole.textContent = 'Founding member';
+      const when = fmtDate(row.current_period_end);
+      subEl.textContent = row.cancel_at_period_end
+        ? `$6/month · Access ends ${when}`
+        : (when ? `$6/month · Renews ${when}` : '$6/month · Active');
+      manageBtn.style.display = ''; manageBtn.onclick = openPortal;
+    } else if (justJoined && membershipTries < 3) {
+      // Webhook may still be writing the row right after checkout — retry briefly.
+      membershipTries++;
+      pillText.textContent = 'Activating';
+      subEl.textContent = 'Finalizing your membership…';
+      manageBtn.style.display = 'none';
+      setTimeout(hydrateMembership, 2000);
+    } else {
+      // Past the gate without a subscription → comped founder on the allowlist.
+      pillText.textContent = 'Founding Circle';
+      if (sideRole) sideRole.textContent = 'Founding Circle';
+      subEl.textContent = 'Your access is comped during the founding period. We’ll always tell you before anything changes.';
+      manageBtn.style.display = 'none';
+    }
+  }
+  if (justJoined) { const wb = document.getElementById('welcomeBanner'); if (wb) wb.style.display = 'block'; }
+  hydrateMembership();
+  document.addEventListener('dionysia:session', hydrateMembership);
+</script>
+</body>
+</html>

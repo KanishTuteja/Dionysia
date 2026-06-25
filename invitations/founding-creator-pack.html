@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DIONYSIA — Founding Creator Pack</title>
+<meta name="description" content="The substantive companion to the founding-filmmaker invitation. For the filmmakers building the first chapter of DIONYSIA." />
+<meta name="theme-color" content="#0a0707" />
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0707;
+    --bg-soft:#120c0c;
+    --line:#1f1716;
+    --ink:#f3eadd;
+    --ink-mute:#a99c8c;
+    --ink-dim:#6f6457;
+    --gold:#c9a35a;
+    --gold-soft:#e0c386;
+    --gold-deep:#8a6f37;
+    --wine:#6b1220;
+    --wine-glow:#8b1a2b;
+  }
+
+  html,body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  body{
+    min-height:100vh;
+    padding:0;
+    position:relative;
+    overflow-x:hidden;
+    background:
+      radial-gradient(ellipse 60% 35% at 50% 12%, rgba(201,163,90,0.045) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 40% at 50% 92%, rgba(107,18,32,0.06) 0%, transparent 70%),
+      var(--bg);
+  }
+
+  /* Softer film grain than the invitation (~0.04) */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;
+    opacity:0.04;
+    z-index:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+    mix-blend-mode:overlay;
+  }
+
+  .page{
+    position:relative;
+    z-index:1;
+    max-width:720px;
+    margin:0 auto;
+    padding:64px 50px 80px;
+  }
+
+  /* ── Header ──────────────────────────────── */
+  header.top{
+    text-align:center;
+    margin-bottom:48px;
+  }
+  .logo{
+    display:flex;justify-content:center;
+    margin-bottom:22px;
+  }
+  .logo svg{width:70px;height:70px;display:block}
+
+  .wordmark{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:400;
+    font-size:42px;
+    letter-spacing:0.22em;
+    color:var(--ink);
+    line-height:1;
+    margin-bottom:18px;
+  }
+
+  .eyebrow{
+    font-family:'Inter',sans-serif;
+    font-size:10.5px;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:400;
+    margin-bottom:38px;
+  }
+
+  .salutation{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:32px;
+    color:var(--ink);
+    letter-spacing:0.01em;
+  }
+
+  /* ── Section structure ───────────────────── */
+  section.chapter{
+    margin-top:0;
+    padding-top:36px;
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+
+  /* Roman-numeral fresh-page breaks for III, V, VII */
+  section.chapter.fresh{
+    page-break-before:auto;
+    break-before:auto;
+  }
+
+  .divider{
+    display:block;
+    width:80px;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+    margin:60px auto 0;
+    opacity:0.7;
+  }
+
+  .section-eyebrow{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:400;
+    text-align:center;
+    margin-bottom:36px;
+  }
+
+  /* Prose column */
+  .prose{
+    max-width:600px;
+    margin:0 auto;
+    font-family:'Cormorant Garamond',serif;
+    font-weight:400;
+    font-size:18px;
+    line-height:1.65;
+    color:var(--ink);
+  }
+  .prose p{margin-bottom:1.1em}
+  .prose p:last-child{margin-bottom:0}
+  .prose em{font-style:italic;color:var(--ink)}
+  .prose .mute{color:var(--ink-mute)}
+
+  /* ── II. Charter — em-dash italic lists ──── */
+  .belief-list, .reject-list{
+    max-width:600px;
+    margin:0 auto 1.4em;
+    list-style:none;
+    padding-left:0;
+  }
+  .belief-list li, .reject-list li{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:17px;
+    line-height:1.6;
+    color:var(--ink);
+    padding-left:36px;
+    text-indent:-22px;
+    margin-bottom:0.55em;
+    margin-left:16px;
+  }
+  .belief-list li::before, .reject-list li::before{
+    content:"— ";
+    color:var(--gold);
+    font-style:normal;
+    margin-right:6px;
+  }
+  .reject-list li{color:var(--ink-mute)}
+  .reject-list li::before{color:var(--gold-deep)}
+
+  .list-heading{
+    font-family:'Inter',sans-serif;
+    font-size:10.5px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--ink-mute);
+    text-align:center;
+    margin:1.4em 0 1em;
+  }
+
+  /* ── III. Role — numbered with bold caps ── */
+  .role-list{
+    max-width:600px;
+    margin:0 auto 1.6em;
+    list-style:none;
+    padding-left:0;
+    counter-reset:role-counter;
+  }
+  .role-list li{
+    counter-increment:role-counter;
+    margin-bottom:1.4em;
+    padding-left:48px;
+    position:relative;
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px;
+    line-height:1.6;
+    color:var(--ink);
+  }
+  .role-list li::before{
+    content:counter(role-counter) ".";
+    position:absolute;
+    left:0;top:0;
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--gold);
+    font-weight:400;
+    padding-top:4px;
+  }
+  .role-list .lead{
+    display:block;
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:500;
+    margin-bottom:6px;
+  }
+
+  /* ── IV. Submission specs ────────────────── */
+  .spec-list{
+    max-width:600px;
+    margin:0 auto 1.4em;
+    list-style:none;
+    padding-left:0;
+  }
+  .spec-list li{
+    font-family:'Cormorant Garamond',serif;
+    font-size:15px;
+    line-height:1.65;
+    color:var(--ink);
+    padding-left:30px;
+    text-indent:-18px;
+    margin-bottom:0.4em;
+    margin-left:16px;
+  }
+  .spec-list li::before{
+    content:"— ";
+    color:var(--gold);
+    margin-right:4px;
+  }
+  .spec-list code, .spec-list .tech{
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:400;
+    letter-spacing:0.02em;
+    color:var(--ink-mute);
+    background:transparent;
+    padding:0 0.15em;
+  }
+  .spec-list .term{
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:500;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-right:6px;
+  }
+
+  /* ── Two nights ───────────────────────────── */
+  .night-block{
+    max-width:600px;
+    margin:0 auto 1.4em;
+  }
+  .night-label{
+    font-family:'Inter',sans-serif;
+    font-size:10.5px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:8px;
+  }
+  .night-title{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:24px;
+    color:var(--ink);
+    margin-bottom:14px;
+    line-height:1.3;
+  }
+  .night-body{
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px;
+    line-height:1.65;
+    color:var(--ink);
+  }
+  .night-body p{margin-bottom:0.9em}
+  .night-body p:last-child{margin-bottom:0}
+
+  .night-spacer{height:32px}
+
+  /* ── Closing (VII) ────────────────────────── */
+  .closing{
+    max-width:560px;
+    margin:0 auto;
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:22px;
+    line-height:1.6;
+    color:var(--ink);
+    letter-spacing:0.01em;
+  }
+  .closing p{margin-bottom:1.1em}
+  .closing p:last-child{margin-bottom:0}
+
+  /* ── Signature ────────────────────────────── */
+  .signature{
+    max-width:560px;
+    margin:60px auto 0;
+    text-align:center;
+  }
+  .signature .sig-name{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:22px;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .signature .sig-role{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:6px;
+  }
+  .signature .sig-url{
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+
+  /* Inline gold for emails / urls in body */
+  .prose a, .night-body a, .closing a{
+    color:var(--gold);
+    text-decoration:none;
+    border-bottom:1px solid rgba(201,163,90,0.3);
+  }
+  .prose a:hover, .night-body a:hover{color:var(--gold-soft)}
+
+  /* ── Print rules ──────────────────────────── */
+  @page{
+    size:Letter;
+    margin:14mm 16mm;
+  }
+
+  @media print{
+    html,body{
+      background:var(--bg) !important;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+      color-adjust:exact;
+    }
+    body::before{display:none !important;}  /* remove grain in print */
+    .page{padding:24px 28px 36px;max-width:none}
+
+    section.chapter{page-break-inside:avoid;break-inside:avoid}
+    section.chapter.fresh{page-break-before:always;break-before:page}
+
+    .divider{margin:32px auto 0}
+    .night-block{page-break-inside:avoid;break-inside:avoid}
+    .role-list li{page-break-inside:avoid;break-inside:avoid}
+    .signature{page-break-inside:avoid;break-inside:avoid}
+
+    .prose, .night-body, .role-list li{font-size:14pt;line-height:1.55}
+    .belief-list li, .reject-list li{font-size:13pt}
+    .spec-list li{font-size:11.5pt}
+    .closing{font-size:16pt}
+    .salutation{font-size:24pt}
+  }
+
+  /*
+   ── Optional light-print variant ──
+   Kanish: if a recipient prefers a black-on-cream printable PDF (e.g. for a
+   physical mail-out), add class="light-print" to the <body> tag below. The
+   styles in this block will activate ONLY at print time. Digital file stays
+   dark cinematic as default.
+
+  @media print{
+    body.light-print{background:#f3eadd !important; color:#1a1410 !important;}
+    body.light-print .prose,
+    body.light-print .night-body,
+    body.light-print .role-list li,
+    body.light-print .closing,
+    body.light-print .wordmark,
+    body.light-print .salutation,
+    body.light-print .signature .sig-name{color:#1a1410 !important;}
+    body.light-print .prose .mute,
+    body.light-print .reject-list li,
+    body.light-print .signature .sig-role{color:#5b4f3f !important;}
+    body.light-print .section-eyebrow,
+    body.light-print .eyebrow,
+    body.light-print .night-label,
+    body.light-print .role-list .lead,
+    body.light-print .signature .sig-url{color:#8a6f37 !important;}
+    body.light-print .divider{background:linear-gradient(90deg,transparent,#8a6f37 50%,transparent) !important;}
+    body.light-print .belief-list li::before,
+    body.light-print .reject-list li::before,
+    body.light-print .role-list li::before,
+    body.light-print .spec-list li::before{color:#8a6f37 !important;}
+  }
+  */
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- ───────── HEADER ───────── -->
+  <header class="top">
+    <div class="logo">
+      <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-label="DIONYSIA mark">
+        <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+        <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+        <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+      </svg>
+    </div>
+
+    <div class="wordmark">DIONYSIA</div>
+    <div class="eyebrow">— Founding Creator Pack —</div>
+
+    <!-- EDIT BELOW: replace {{NAME}} with the recipient's first name only. -->
+    <div class="salutation">For {{NAME}}.</div>
+  </header>
+
+  <!-- ───────── I. WELCOME ───────── -->
+  <section class="chapter">
+    <hr class="divider" aria-hidden="true">
+    <div class="section-eyebrow">I. Welcome</div>
+
+    <div class="prose">
+      <p>You said yes — and that one word changes what this place is going to be.</p>
+
+      <p>DIONYSIA is not another upload feed and it is not a curated showcase that pretends to be a platform. It is the beginning of a permanent institution: a global home for serious cinema made in a new medium, built to outlast a hundred trend cycles and to scale, deliberately, into one of the cultural surfaces this medium will be defined by.</p>
+
+      <p>The first chapter is being built with a founding circle of filmmakers whose craft long predates the current AI moment — people who have already built studios, schools, careers, and bodies of work, and who can tell the difference between a generated frame and a directed one. You are one of them. Not as an early user of a product, and not as a name on a launch list. As one of the architects of the institution itself.</p>
+
+      <p>Everything DIONYSIA will mean in five years gets shaped by the work this founding circle puts on the wall in this first chapter — and by the standard you, collectively, decide is the standard. This document is the long-form version of your yes. It lays out what we believe, what we will ask of you, what we will <em>not</em> ask, what the films need technically, and how the next several weeks unfold. Read it the way you'd read a director's bible. The point isn't to agree with every word — it's to know exactly what you are joining, before you join it.</p>
+    </div>
+  </section>
+
+  <!-- ───────── II. THE FOUNDING CHARTER ───────── -->
+  <section class="chapter">
+    <hr class="divider" aria-hidden="true">
+    <div class="section-eyebrow">II. The Founding Charter</div>
+
+    <div class="prose">
+      <p>Every platform pretends to have values. Most discover them under pressure and rewrite them quietly. DIONYSIA's charter is fixed, in writing, before the doors open. It is the rail every editorial, product, and infrastructure decision will pass through — at this size, and at every size after.</p>
+    </div>
+
+    <div class="list-heading">— We believe —</div>
+    <ul class="belief-list">
+      <li>that AI is a medium, the way 16mm or DV is a medium — not a subject, not a genre, and never the noun in our sentences.</li>
+      <li>that the films are directed, not summoned. A tool can render a frame. Only a filmmaker can intend one.</li>
+      <li>that emotional resonance is the only criterion that matters. Audiences will always forgive imperfect images. They never forgive emotional disconnection.</li>
+      <li>that a serious work deserves to land in a place where serious people will actually watch it — credits, breath, silence, and all.</li>
+      <li>that curation is care, not gatekeeping. A "no" with a reason is more respectful than an algorithm's indifference.</li>
+      <li>that the filmmakers who built the first chapter should be honored as such — economically, editorially, and culturally — for as long as the platform exists.</li>
+    </ul>
+
+    <div class="list-heading">— We reject —</div>
+    <ul class="reject-list">
+      <li>the contextual collapse of feeds — where a year of work shares a scroll with an "animals dancing" clip and authorship quietly disappears.</li>
+      <li>the slot machine of unmoderated upload, the cynicism of "creator-owned" as marketing copy without real ownership, and any phrase that uses the word "content" to describe a film.</li>
+      <li>open submissions without an editorial wall. Submission is not publication.</li>
+      <li>algorithmic for-you feeds, where popularity becomes a substitute for taste and curation disappears into noise. Discovery on DIONYSIA stays editorially intentional — at this catalog size, and at every size after.</li>
+      <li>any framing — internal or external — that treats founding filmmakers as a stepping stone, a stage, or an audience to be replaced. You are not the rollout. You are the institution.</li>
+    </ul>
+  </section>
+
+  <!-- ───────── III. YOUR ROLE ───────── -->
+  <section class="chapter fresh">
+    <hr class="divider" aria-hidden="true">
+    <div class="section-eyebrow">III. Your Role</div>
+
+    <div class="prose">
+      <p>The honest version of what we are asking — and, just as importantly, of what we are not.</p>
+    </div>
+
+    <div class="list-heading">— What we ask —</div>
+    <ol class="role-list">
+      <li>
+        <span class="lead">One film, or more, when ready.</span>
+        We are inviting you to bring the work you'd want this place to be defined by. That can be a single film, a short collection, or several pieces from across your catalog — whatever shape best represents what you want a founding-circle filmmaker of DIONYSIA to be known for. We are not chasing volume; we are honoring the standard you set.
+      </li>
+      <li>
+        <span class="lead">Production notes, written by you.</span>
+        A short director's statement for each film — what the film is, what it was trying to be, what the tools were, where the hand was, where the machine was. This is not marketing copy. It is the record that lets a viewer take your work seriously.
+      </li>
+      <li>
+        <span class="lead">Your name on the founding wall.</span>
+        A public credit as a founding filmmaker of DIONYSIA, with the right to revoke it at any time. The wall is the most visible asset in the platform's first year, and it belongs to the people who built the first chapter — permanently, regardless of where DIONYSIA goes after.
+      </li>
+      <li>
+        <span class="lead">Presence, on two nights.</span>
+        The Founding Filmmakers night — gated, private, peer-to-peer — and a single public premiere window in the weeks after, where you appear in the live room with viewers for thirty to forty-five minutes. Both are detailed in Section V.
+      </li>
+      <li>
+        <span class="lead">Honesty, in private.</span>
+        Tell us what is broken. Tell us what is missing. Tell us when the editorial framing is wrong about your work. The founding circle is a peerage, not a customer base — and the only way the platform stays serious as it scales is if the people who built the first chapter speak honestly to the person running it.
+      </li>
+    </ol>
+
+    <div class="list-heading">— What we do NOT ask —</div>
+    <ol class="role-list">
+      <li>
+        <span class="lead">No exclusivity required.</span>
+        At this stage, no exclusivity is asked of you, on any film. You can keep distributing wherever you already do — YouTube, Vimeo, festivals, your own site, your studio's channels. As the platform matures, opt-in premiere-window agreements with clear, transparent terms will be introduced — never as a default condition, and never tied to founding-circle status. The regulations that govern licensing, windowing, and rights will be written carefully and shared in writing before they take effect.
+      </li>
+      <li>
+        <span class="lead">No volume targets, no upload cadence.</span>
+        We will never ask you to ship faster. The founding circle exists in the opposite direction from those incentives. If you bring one film or you bring several, both are welcomed on the terms you set.
+      </li>
+      <li>
+        <span class="lead">No marketing labor.</span>
+        You are not a growth channel for the platform. We will not ask you to repost, cross-promote, tag, or perform on social. If you choose to share, that is yours.
+      </li>
+      <li>
+        <span class="lead">No equity, no rights transfer, no upfront cost.</span>
+        Your work remains yours, in full. The platform never claims a license beyond display. There is no submission fee, no founding-creator fee, no equity exchange. Ever.
+      </li>
+      <li>
+        <span class="lead">No silence in exchange.</span>
+        If at any point this stops being a place you want your work in, you tell us, we lift the films, and you leave with everything you came with. The door swings both ways, at every size the platform reaches.
+      </li>
+    </ol>
+  </section>
+
+  <!-- ───────── IV. SUBMISSION SPECIFICATIONS ───────── -->
+  <section class="chapter">
+    <hr class="divider" aria-hidden="true">
+    <div class="section-eyebrow">IV. Submission Specifications</div>
+
+    <div class="prose">
+      <p>The platform runs on a premium video pipeline (Mux), the same infrastructure used by MasterClass, Patreon, and HBO Max. Specs below are what gives your film the best master on our player — not gatekeeping criteria.</p>
+    </div>
+
+    <ul class="spec-list">
+      <li><span class="term">Master format</span> <span class="tech">ProRes 422 HQ</span>, <span class="tech">DNxHR HQ</span>, or high-bitrate <span class="tech">H.264 / H.265 .mp4</span>. We will accept any high-quality master; we transcode from there.</li>
+      <li><span class="term">Resolution</span> <span class="tech">1920×1080</span> minimum; <span class="tech">3840×2160 (4K)</span> preferred if it exists. Vertical orientations supported but framed for letterbox display by default.</li>
+      <li><span class="term">Frame rate</span> Native to your project — <span class="tech">23.976</span>, <span class="tech">24</span>, <span class="tech">25</span>, or <span class="tech">29.97 fps</span>. Do not conform unnecessarily.</li>
+      <li><span class="term">Audio</span> Stereo or <span class="tech">5.1</span>, <span class="tech">48 kHz</span>, <span class="tech">−14 LUFS</span> integrated target (broadcast-streaming standard). Loudness pass strongly preferred; we can normalize if needed.</li>
+      <li><span class="term">Runtime</span> No upper or lower bound. Shorts (under 15 minutes), features, episodic — the editorial frame adapts. We resist the dogma that any one runtime is "right" for the medium.</li>
+      <li><span class="term">Poster</span> A title-card still at <span class="tech">800×1200</span> (vertical) plus a <span class="tech">1920×1080</span> hero frame. If you don't have a poster, we'll cut one from the film with you.</li>
+      <li><span class="term">Captions</span> <span class="tech">.vtt</span> or <span class="tech">.srt</span> in your authoring language; English captions required for non-English work. We can generate first drafts; final pass is yours to approve.</li>
+      <li><span class="term">Provenance</span> Tools used, hand-authored layers, AI-generated layers, and — if any synthesized likeness appears — performer-consent attestation. This becomes part of the public film record. It is a moat, not a footnote.</li>
+      <li><span class="term">Delivery</span> Direct link to a private cloud transfer (Frame.io, Dropbox, Google Drive, WeTransfer Pro). No public file hosts. We confirm receipt in writing within twenty-four hours.</li>
+    </ul>
+
+    <div class="prose">
+      <p class="mute">These specifications are the current pipeline. The platform's video, audio, and rendering quality will continue to improve with every update — and masters delivered into the founding library today automatically benefit from every upgrade after. The standard floor will only rise. Yours rises with it.</p>
+      <p class="mute">If any of the above is a problem — gear constraints, formats you don't have in hand, anything — write back. The specs are a target, not a wall.</p>
+    </div>
+  </section>
+
+  <!-- ───────── V. THE TWO NIGHTS ───────── -->
+  <section class="chapter fresh">
+    <hr class="divider" aria-hidden="true">
+    <div class="section-eyebrow">V. The Two Nights</div>
+
+    <div class="prose">
+      <p>The first chapter has two scheduled moments. Both are deliberately curated. Both are non-negotiable as cinema events — they happen with you or they do not happen.</p>
+    </div>
+
+    <div class="night-block">
+      <div class="night-label">— The first night —</div>
+      <div class="night-title">Founding Filmmakers, Sunday, May 24, 2026.</div>
+      <div class="night-body">
+        <p>Private, gated, peer-only. The platform opens for the first time, with the founding filmmakers and the founder in the room. Magic-link sign-in, allowlist-only — no public URL works, no link forwards, no spillover. The work on the walls that night is yours and the others'. Your films <em>are</em> the catalog.</p>
+        <p>No press, no metrics, no audience-facing spectacle. The point of the first night is that the people who built the institution are the first to see it standing up.</p>
+      </div>
+    </div>
+
+    <div class="night-spacer"></div>
+
+    <div class="night-block">
+      <div class="night-label">— The second night —</div>
+      <div class="night-title">DIONYSIA First Light, June 8–10, 2026 (one evening, date confirmed by June 1).</div>
+      <div class="night-body">
+        <p>On the evening of June 8–10, we'll open the doors a little wider — for one night only. Film experts, curators, fellow artists, and the people you'd want in the room are invited to a live premiere of the founding work. You'll be the host, not the visitor. More on that closer to the date.</p>
+        <p>Live comment surface (Discord, Telegram, or Substack — locked by June 1). One founding film unveiled in full. The filmmaker present in the live room for thirty to forty-five minutes after the credits roll. Format borrowed from MUBI's "Film of the Night" and the indie album-release listening party, sharpened for cinema.</p>
+        <p>Your role on the second night is not to perform. It is to be in the room while serious people watch your work for the first time, and to answer the questions that follow with the same care you put into making it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── VI. A DIRECT LINE ───────── -->
+  <section class="chapter">
+    <hr class="divider" aria-hidden="true">
+    <div class="section-eyebrow">VI. A Direct Line</div>
+
+    <div class="prose">
+      <p>There is no support queue. There is no founding-creator portal. There is one person running this, and that person is reachable.</p>
+
+      <p>For anything substantive — film delivery, the editorial framing of your work, the second-night logistics, a doubt about the institution, an idea that should change the platform — write to <a href="mailto:kanishtuteja@gmail.com">kanishtuteja@gmail.com</a> directly. Replies inside twenty-four hours, usually faster.</p>
+
+      <p>The platform itself lives at <a href="https://dionysia.ca">dionysia.ca</a>. Until May 24 it shows a single opening surface; on the first night, the room behind it opens, and your allowlisted email gets you in.</p>
+
+      <p class="mute">If something is wrong, say it directly. The founding circle is small enough — and serious enough — that there is no professional reason to soften the signal. You're not a customer. You're a peer.</p>
+    </div>
+  </section>
+
+  <!-- ───────── VII. CLOSING ───────── -->
+  <section class="chapter fresh">
+    <hr class="divider" aria-hidden="true">
+    <div class="section-eyebrow">VII. Closing</div>
+
+    <div class="closing">
+      <p>The cultural surfaces that defined the last century of cinema — the studios, the festivals, the houses — all began with a founding circle of artists who took the work seriously before anyone was watching.</p>
+
+      <p>DIONYSIA is being built to be one of those surfaces for the medium that comes next: to be everywhere this work deserves to be seen, on every screen it deserves to live on, for as long as cinema is made this way. The institution begins with you.</p>
+
+      <p>The reel is hand-set, frame by frame. Thank you for being one of the hands.</p>
+    </div>
+
+    <div class="signature">
+      <div class="sig-name">— Kanish</div>
+      <div class="sig-role">Founder, DIONYSIA</div>
+      <div class="sig-url">dionysia.ca</div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

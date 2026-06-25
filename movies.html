@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<title>Dionysia — Movies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: { DEFAULT: '#f3eadd', mute: '#a99c8c', dim: '#6f6457' },
+          bg:  { DEFAULT: '#0a0707', elev: '#120c0c', card: '#15100f', line: '#1f1716' },
+          wine:{ DEFAULT: '#6b1220', deep: '#3d0a13', glow: '#8b1a2b' },
+          gold:{ DEFAULT: '#c9a35a', soft: '#e0c386', deep: '#8a6f37' },
+        },
+        fontFamily: {
+          serif: ['"Cormorant Garamond"', 'serif'],
+          sans:  ['Inter', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  :root { --bg:#0a0707; --ink:#f3eadd; --gold:#c9a35a; --gold-soft:#e0c386; --wine:#6b1220; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .font-serif { font-family: 'Cormorant Garamond', serif; }
+  .display { font-family: 'Cormorant Garamond', serif; font-weight: 500; letter-spacing: -0.005em; }
+  .eyebrow {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    font-size: 11px; color: var(--gold);
+  }
+  .label {
+    font-family: 'Inter', sans-serif; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    font-size: 10.5px; color: var(--ink); opacity: 0.7;
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
+    opacity: 0.07; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.07 0 0 0 0 0.05 0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  ::selection { background: rgba(201,163,90,0.35); color: #fff; }
+
+  .section-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(243,234,221,0.08) 20%, rgba(243,234,221,0.08) 80%, transparent);
+  }
+
+  /* Frames + painterly gradients (lifted from discover.html so visual language is consistent) */
+  .frame {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    isolation: isolate;
+    background: #1a1213;
+  }
+  .frame::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(120% 80% at 30% 110%, rgba(0,0,0,0.5), transparent 60%);
+    pointer-events: none;
+  }
+  .frame-noise {
+    position: absolute; inset: 0;
+    opacity: 0.18; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    pointer-events: none;
+  }
+
+  .grad-meridian { background: radial-gradient(70% 60% at 30% 30%, rgba(64,30,80,0.85), transparent 70%), radial-gradient(60% 60% at 80% 20%, rgba(20,80,90,0.7), transparent 70%), radial-gradient(80% 70% at 60% 90%, rgba(120,60,30,0.55), transparent 70%), linear-gradient(160deg, #1a1426, #0e1518 60%, #1f110c); }
+  .grad-entropy { background: radial-gradient(70% 80% at 30% 30%, rgba(80,40,80,0.8), transparent 70%), radial-gradient(60% 60% at 80% 80%, rgba(20,30,60,0.7), transparent 70%), linear-gradient(160deg, #1d1426, #0c0e1a); }
+  .grad-glow    { background: radial-gradient(70% 60% at 30% 30%, rgba(50,50,90,0.85), transparent 70%), radial-gradient(60% 60% at 80% 70%, rgba(90,40,80,0.55), transparent 70%), linear-gradient(160deg, #161329, #100912); }
+  .grad-slow    { background: radial-gradient(70% 70% at 30% 40%, rgba(100,60,30,0.7), transparent 70%), radial-gradient(60% 60% at 80% 90%, rgba(50,30,20,0.7), transparent 70%), linear-gradient(160deg, #1d1410, #0e0805); }
+  .grad-bone    { background: radial-gradient(70% 70% at 30% 40%, rgba(60,30,60,0.85), transparent 70%), radial-gradient(60% 60% at 80% 80%, rgba(20,15,30,0.85), transparent 70%), linear-gradient(160deg, #1c1320, #0a060c); }
+  .grad-river   { background: radial-gradient(70% 70% at 30% 40%, rgba(60,40,90,0.7), transparent 70%), radial-gradient(70% 60% at 80% 80%, rgba(20,20,40,0.85), transparent 70%), linear-gradient(160deg, #1a1429, #08070f); }
+  .grad-tess    { background: radial-gradient(70% 70% at 30% 40%, rgba(110,70,40,0.6), transparent 70%), radial-gradient(60% 60% at 80% 80%, rgba(40,20,15,0.85), transparent 70%), linear-gradient(160deg, #1d130c, #0a0604); }
+  .grad-echo    { background: radial-gradient(70% 70% at 30% 40%, rgba(50,40,70,0.7), transparent 70%), radial-gradient(60% 60% at 80% 80%, rgba(80,40,30,0.55), transparent 70%), linear-gradient(160deg, #181426, #100a0f); }
+  .grad-ash     { background: radial-gradient(70% 70% at 30% 40%, rgba(30,30,60,0.85), transparent 70%), radial-gradient(60% 60% at 80% 80%, rgba(60,30,90,0.55), transparent 70%), linear-gradient(160deg, #0e0e1a, #06060a); }
+  .grad-flare   { background: radial-gradient(70% 70% at 30% 40%, rgba(140,55,40,0.65), transparent 70%), radial-gradient(60% 60% at 80% 80%, rgba(60,20,15,0.85), transparent 70%), linear-gradient(160deg, #1f100b, #0a0604); }
+
+  /* Play button */
+  .play {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 1px solid rgba(243,234,221,0.5);
+    background: rgba(10,7,7,0.35);
+    backdrop-filter: blur(6px);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform .35s cubic-bezier(.2,.6,.2,1), background .3s, border-color .3s;
+    cursor: pointer;
+  }
+  .play:hover {
+    transform: scale(1.06);
+    border-color: var(--gold);
+    background: rgba(107,18,32,0.35);
+  }
+  .play svg { transform: translateX(2px); }
+  .play--sm { width: 28px; height: 28px; }
+  .play--xs { width: 24px; height: 24px; }
+  .play--lg { width: 64px; height: 64px; }
+
+  /* Tile */
+  .tile { position: relative; transition: transform .4s cubic-bezier(.2,.6,.2,1); cursor: pointer; }
+  .tile:hover { transform: translateY(-3px); }
+  .tile:hover .tile-frame { border-color: rgba(201,163,90,0.4); }
+  .tile-frame {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(243,234,221,0.06);
+    transition: border-color .35s;
+  }
+  .tile-frame .play--sm {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .tile:hover .tile-frame .play--sm { opacity: 0.95; }
+  .tile-meta { padding-top: 14px; }
+  .rating-dot { color: var(--gold); }
+
+  /* Top10 */
+  .top10-row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(220px, 1fr);
+    gap: 28px;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    padding: 16px 4px 28px;
+    margin: -16px -4px 0;
+  }
+  .top10-row::-webkit-scrollbar { height: 4px; }
+  .top10-row::-webkit-scrollbar-track { background: rgba(243,234,221,0.04); }
+  .top10-row::-webkit-scrollbar-thumb { background: rgba(201,163,90,0.35); border-radius: 999px; }
+
+  .top10-card {
+    position: relative;
+    scroll-snap-align: start;
+    padding-left: 38px;
+    cursor: pointer;
+  }
+  .top10-card .num {
+    position: absolute;
+    left: -22px; bottom: -14px;
+    z-index: 1;
+    pointer-events: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 230px;
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(243,234,221,0.55);
+    letter-spacing: -0.04em;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+    transition: -webkit-text-stroke .35s, color .35s, transform .4s cubic-bezier(.2,.6,.2,1);
+  }
+  .top10-card:hover .num {
+    -webkit-text-stroke: 2px var(--gold);
+    transform: translateY(-2px);
+  }
+  .top10-card .num--two-digit {
+    left: -54px;
+    font-size: 220px;
+    letter-spacing: -0.06em;
+  }
+  .top10-card .top10-tile-frame {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(243,234,221,0.06);
+    transition: border-color .35s, transform .4s cubic-bezier(.2,.6,.2,1);
+    z-index: 2;
+  }
+  .top10-card:hover .top10-tile-frame {
+    border-color: rgba(201,163,90,0.45);
+    transform: translateY(-3px);
+  }
+
+  /* Originals row — wider, cinematic */
+  .original-card {
+    cursor: pointer;
+    transition: transform .4s cubic-bezier(.2,.6,.2,1);
+  }
+  .original-card:hover { transform: translateY(-3px); }
+  .original-frame {
+    position: relative;
+    aspect-ratio: 16/10;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(243,234,221,0.06);
+    transition: border-color .35s;
+  }
+  .original-card:hover .original-frame { border-color: rgba(201,163,90,0.4); }
+
+  .badge-original {
+    position: absolute; left: 14px; top: 14px;
+    z-index: 3;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 5px 10px;
+    background: rgba(10,7,7,0.65);
+    border: 1px solid rgba(201,163,90,0.55);
+    color: var(--gold-soft);
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 500;
+    backdrop-filter: blur(6px);
+  }
+  .badge-original::before {
+    content: "";
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(201,163,90,0.7);
+  }
+
+  /* Spotlight (top featured) — responsive aspect so headline never clips */
+  .spotlight {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    min-height: 460px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  @media (min-width: 768px) {
+    .spotlight { aspect-ratio: 16 / 9; min-height: 520px; }
+  }
+  @media (min-width: 1100px) {
+    .spotlight { aspect-ratio: 21 / 9; min-height: 540px; }
+  }
+  .spotlight-veil {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, rgba(10,7,7,0.85) 0%, rgba(10,7,7,0.45) 40%, transparent 70%),
+      linear-gradient(180deg, transparent 50%, rgba(10,7,7,0.55) 100%);
+  }
+
+  /* Filter chips */
+  .chip {
+    display: inline-flex; align-items: center;
+    padding: 7px 14px;
+    border: 1px solid rgba(243,234,221,0.16);
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    background: rgba(243,234,221,0.02);
+    transition: border-color .3s, color .3s, background .3s;
+    cursor: pointer;
+  }
+  .chip:hover { border-color: rgba(201,163,90,0.5); color: var(--gold-soft); }
+  .chip--active {
+    background: linear-gradient(180deg, #d8b269, #b58a3f);
+    color: #1a0a0d;
+    border-color: transparent;
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    padding: 0.7rem 1.15rem;
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    transition: transform .35s, background .3s, color .3s, border-color .3s, box-shadow .35s;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, #d8b269, #b58a3f);
+    color: #1a0a0d;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 14px 40px -14px rgba(201,163,90,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 22px 50px -16px rgba(201,163,90,0.55);
+  }
+  .btn-ghost {
+    color: var(--ink);
+    border-color: rgba(243,234,221,0.22);
+    background: rgba(255,255,255,0.02);
+  }
+  .btn-ghost:hover { border-color: rgba(201,163,90,0.55); color: var(--gold-soft); }
+
+  /* Nav (matched) */
+  .nav-pill {
+    padding: 7px 14px; border-radius: 2px;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(243,234,221,0.6);
+    transition: color .3s;
+  }
+  .nav-pill:hover { color: var(--ink); }
+  .nav-pill--active { color: var(--gold); }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .9s cubic-bezier(.2,.6,.2,1), transform .9s cubic-bezier(.2,.6,.2,1); transition-delay: var(--rd, 0ms); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  .scroll-controls {
+    display: inline-flex; gap: 6px;
+  }
+  .scroll-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(243,234,221,0.18);
+    background: rgba(10,7,7,0.35);
+    color: rgba(243,234,221,0.75);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: border-color .25s, color .25s;
+    cursor: pointer;
+  }
+  .scroll-btn:hover { border-color: var(--gold); color: var(--gold-soft); }
+  .scroll-btn:disabled { opacity: 0.3; cursor: default; }
+
+  .logo-mark { display: inline-block; }
+
+  /* Subtle hover overlay on tiles */
+  .tile-frame .tile-veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(10,7,7,0.7) 100%);
+    pointer-events: none;
+  }
+
+  /* Pinned title under tile */
+  .tile-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  /* "View all" link */
+  .view-all {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    transition: color .3s;
+  }
+  .view-all:hover { color: var(--gold-soft); }
+</style>
+<!-- Plausible analytics -->
+<script async src="https://plausible.io/js/pa-h4cO0vpBy-TIQBp-gSbyx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<!-- Auth gate -->
+<script src="gate.js"></script>
+<!-- Mobile nav -->
+<script src="mobile-nav.js" defer></script>
+</head>
+<body class="bg-bg text-ink" data-screen-label="Movies">
+
+<div class="grain"></div>
+
+<!-- ============== NAV ============== -->
+<header class="sticky top-0 z-50 backdrop-blur-md bg-bg/70 border-b border-white/5">
+  <nav class="pl-6 md:pl-12 lg:pl-16 pr-4 md:pr-5 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <svg class="logo-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 9.2 L24.4 24 L7.6 24 Z" stroke="#c9a35a" stroke-width="0.9" fill="none" opacity="0.9"/>
+        <path d="M3 27.5 L12.6 27.5 L7.6 18.3 Z" fill="#6b1220"/>
+        <path d="M16 3 L29 27.5 L12.6 27.5 L7.6 18.3 Z" stroke="#f3eadd" stroke-width="1.15" fill="none" stroke-linejoin="miter"/>
+      </svg>
+      <span class="display tracking-[0.22em] text-[15px] uppercase">Dionysia</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2">
+      <a href="discover.html" class="nav-pill">Home</a>
+      <a href="movies.html" class="nav-pill nav-pill--active">Movies</a>
+      <a href="series.html" class="nav-pill">Series</a>
+      <a href="shorts.html" class="nav-pill">Short Films</a>
+      <a href="watchlist.html" class="nav-pill">Watchlist</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:border-gold/50 transition-colors" aria-label="Search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f3eadd" stroke-width="1.5">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+      </button>
+      <a href="account.html" class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gold/40 hover:border-gold transition-colors overflow-hidden" aria-label="Account" style="background: linear-gradient(140deg, #6b1220, #3d0a13);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e0c386" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="12" cy="8" r="3.5"/>
+          <path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main class="px-6 md:px-12 lg:px-16 pt-12 pb-32 max-w-[1500px] mx-auto">
+
+  <!-- ============== PAGE HEADER ============== -->
+  <section class="reveal mb-10">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+      <div>
+        <p class="eyebrow mb-3">Feature Films · The anchor format</p>
+        <h1 class="display text-[64px] md:text-[88px] leading-[0.95] tracking-tight">Movies</h1>
+      </div>
+      <p class="font-serif italic text-ink-mute text-lg md:text-xl max-w-md">
+        — the long form, and why it waits —
+      </p>
+    </div>
+  </section>
+
+  <!-- ============== FEATURES — POSITION + ROADMAP ============== -->
+
+  <!-- The stated position -->
+  <section class="reveal">
+    <div class="section-rule mb-14 md:mb-16"></div>
+    <div class="max-w-3xl">
+      <p class="eyebrow mb-6">Why this page is quiet</p>
+      <div class="space-y-6 font-serif text-[21px] md:text-[25px] leading-relaxed text-ink/85">
+        <p>Dionysia opens with short films and series. Not because the feature matters less — because it matters most.</p>
+        <p>A feature film is a year of someone's life. Before we ask a filmmaker to premiere one here, the platform has to be worth it: a real audience, real curation, a room that does the work justice. We're building that first — in the open, with the founding circle.</p>
+        <p>The feature is the anchor format. It arrives as the circle grows — and the filmmakers in the room now will be the first ones asked to bring it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The roadmap -->
+  <section class="reveal mt-20">
+    <div class="mb-10">
+      <p class="eyebrow mb-3">The Sequence</p>
+      <h2 class="display text-[34px] md:text-[48px] leading-[1.05]">How the programme unfolds</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Phase I — now -->
+      <div class="rounded-md p-7" style="border:1px solid rgba(201,163,90,0.4); background:linear-gradient(180deg, rgba(201,163,90,0.07), rgba(201,163,90,0.01));">
+        <div class="flex items-baseline justify-between mb-5">
+          <span class="display text-[44px] leading-none text-gold-soft">I</span>
+          <span style="font-family:'Inter',sans-serif; font-weight:500; letter-spacing:0.26em; text-transform:uppercase; font-size:10.5px; color:var(--gold-soft);">Now</span>
+        </div>
+        <p class="font-serif text-[24px] leading-tight mb-2">Opening Night</p>
+        <p class="text-ink-mute text-[14px] leading-relaxed">Short films and series from the founding circle. Premieres May 24, 2026.</p>
+      </div>
+
+      <!-- Phase II — next -->
+      <div class="rounded-md p-7" style="border:1px solid rgba(243,234,221,0.08); background:rgba(21,16,15,0.5);">
+        <div class="flex items-baseline justify-between mb-5">
+          <span class="display text-[44px] leading-none" style="color:rgba(243,234,221,0.3);">II</span>
+          <span style="font-family:'Inter',sans-serif; font-weight:500; letter-spacing:0.26em; text-transform:uppercase; font-size:10.5px; color:rgba(243,234,221,0.42);">Next</span>
+        </div>
+        <p class="font-serif text-[24px] leading-tight mb-2">The Circle Widens</p>
+        <p class="text-ink-mute text-[14px] leading-relaxed">New creators join. The first curated seasons. The catalogue deepens.</p>
+      </div>
+
+      <!-- Phase III — then -->
+      <div class="rounded-md p-7" style="border:1px solid rgba(243,234,221,0.08); background:rgba(21,16,15,0.5);">
+        <div class="flex items-baseline justify-between mb-5">
+          <span class="display text-[44px] leading-none" style="color:rgba(243,234,221,0.3);">III</span>
+          <span style="font-family:'Inter',sans-serif; font-weight:500; letter-spacing:0.26em; text-transform:uppercase; font-size:10.5px; color:rgba(243,234,221,0.42);">Then</span>
+        </div>
+        <p class="font-serif text-[24px] leading-tight mb-2">The Long Form</p>
+        <p class="text-ink-mute text-[14px] leading-relaxed">Feature films premiere on Dionysia.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Creator invitation -->
+  <section class="reveal mt-20">
+    <div class="section-rule mb-14 md:mb-16"></div>
+    <div class="max-w-2xl mx-auto text-center pb-6">
+      <p class="eyebrow mb-5">For Filmmakers</p>
+      <p class="font-serif text-[26px] md:text-[32px] leading-snug mb-8 text-ink/90">
+        Already building a feature with AI? Tell us now — not when it's finished.
+      </p>
+      <a href="index.html#creators" class="btn btn-primary">Apply as a Creator <span>→</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/5 py-8 px-6 md:px-10">
+  <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] tracking-[0.22em] uppercase text-ink-dim">
+    <span>© 2026 Dionysia</span>
+    <div class="flex items-center gap-5">
+      <a href="brand-bumper.html" class="hover:text-gold transition-colors">▷ Opening titles</a>
+      <span class="opacity-30">·</span>
+      <a href="index.html" class="hover:text-gold transition-colors">About</a>
+    </div>
+    <a href="discover.html" class="hover:text-gold transition-colors">Back to discover →</a>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.05, rootMargin: "0px 0px -3% 0px" });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Top10 horizontal scroll controls
+  (function () {
+    const row = document.getElementById('top10-row');
+    if (!row) return;
+    document.querySelectorAll('[data-scroll]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const dir = parseFloat(btn.getAttribute('data-scroll')) || 1;
+        row.scrollBy({ left: dir * row.clientWidth * 0.85, behavior: 'smooth' });
+      });
+    });
+  })();
+
+  // Filter chip toggle (visual only)
+  document.querySelectorAll('.chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('chip--active'));
+      chip.classList.add('chip--active');
+    });
+  });
+</script>
+
+</body>
+</html>

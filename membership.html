@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<title>Dionysia — Become a member</title>
+<meta name="description" content="Create your account and join Dionysia — curated AI cinema for $6/month. Cancel anytime." />
+<meta name="theme-color" content="#0a0707" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script async src="https://plausible.io/js/pa-h4cO0vpBy-TIQBp-gSbyx.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#0a0707;--ink:#f3eadd;--ink-mute:#a99c8c;--ink-dim:#6f6457;--gold:#c9a35a;--gold-soft:#e0c386;--wine:#6b1220;--wine-glow:#8b1a2b;--line:#1f1716}
+  html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+  body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:3em 1.4em;position:relative;overflow-x:hidden;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 18%, rgba(201,163,90,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 45% at 50% 90%, rgba(107,18,32,0.13) 0%, transparent 70%),
+      var(--bg);}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:0.06;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");}
+  .font-serif{font-family:'Cormorant Garamond',serif}
+  .stage{width:100%;max-width:440px;text-align:center;position:relative;z-index:1}
+  .logo{display:flex;justify-content:center;margin-bottom:1.3em}
+  .logo svg{width:48px;height:48px}
+  .wordmark{font-family:'Cormorant Garamond',serif;font-weight:500;text-transform:uppercase;font-size:clamp(28px,7vw,38px);letter-spacing:0.2em;padding-left:0.2em;margin-bottom:0.4em}
+  .tagline{font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:2.2em}
+  .card{position:relative;border:1px solid rgba(201,163,90,0.3);border-radius:6px;padding:2.4em 2em 2em;overflow:hidden;text-align:left;
+    background:linear-gradient(180deg, rgba(30,20,18,0.55), rgba(15,10,10,0.55));
+    box-shadow:0 40px 90px -50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(243,234,221,0.04)}
+  .card::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 50% at 50% 0%, rgba(201,163,90,0.10), transparent 60%);pointer-events:none}
+  .eyebrow{font-size:10.5px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold)}
+  .price-line{font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--ink);margin:0.3em 0 0.2em}
+  .price-line b{font-weight:500}
+  .perk-row{font-size:12.5px;color:var(--ink-mute);margin-bottom:1.6em}
+  .field-label{font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-dim);display:block;margin:0 0 0.3em}
+  .field{width:100%;background:transparent;border:0;border-bottom:1px solid var(--ink-dim);color:var(--ink);
+    font-family:'Inter',sans-serif;font-weight:300;font-size:15.5px;padding:0.6em 0.1em;transition:border-color .2s;margin-bottom:1.2em}
+  .field::placeholder{color:var(--ink-dim)}
+  .field:focus{outline:none;border-bottom-color:var(--gold)}
+  .field.err{border-bottom-color:var(--wine-glow)}
+  .field:-webkit-autofill,.field:-webkit-autofill:hover,.field:-webkit-autofill:focus{
+    -webkit-text-fill-color:var(--ink)!important;caret-color:var(--gold)!important;
+    transition:background-color 600000s 0s, color 600000s 0s!important;-webkit-background-clip:text!important;background-clip:text!important}
+  .btn{display:flex;width:100%;align-items:center;justify-content:center;gap:0.6rem;padding:1.05em 1.5em;
+    font-size:12px;letter-spacing:0.22em;text-transform:uppercase;font-weight:600;border:0;border-radius:2px;cursor:pointer;
+    background:linear-gradient(180deg,#d8b269,#b58a3f);color:#1a0a0d;
+    box-shadow:0 1px 0 rgba(255,255,255,0.25) inset, 0 14px 40px -14px rgba(201,163,90,0.45);
+    transition:transform .35s cubic-bezier(.2,.6,.2,1), box-shadow .35s;text-decoration:none}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,0.3) inset, 0 22px 50px -16px rgba(201,163,90,0.6)}
+  .btn:disabled{opacity:0.55;cursor:wait;transform:none}
+  .fineprint{margin-top:0.9em;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);text-align:center}
+  .msg{margin-top:1.1em;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;min-height:1.2em;text-align:center}
+  .msg.err{color:#cf6b78}
+  .msg.ok{color:var(--gold-soft)}
+  .alt{margin-top:1.4em;font-size:12.5px;color:var(--ink-mute);text-align:center}
+  .alt a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,163,90,0.3)}
+  .alt a:hover{color:var(--gold-soft)}
+  .notice{border:1px solid rgba(201,163,90,0.25);background:rgba(201,163,90,0.05);border-radius:4px;padding:0.9em 1.1em;margin-bottom:1.5em;font-size:13.5px;color:var(--ink-mute);font-family:'Cormorant Garamond',serif;font-style:italic;display:none}
+  .back{margin-top:2.2em;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim)}
+  .back a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,163,90,0.3)}
+  .back a:hover{color:var(--gold-soft)}
+  ::selection{background:rgba(201,163,90,0.35);color:#fff}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="help.js" defer></script>
+</head>
+<body>
+<div class="stage">
+  <div class="logo">
+    <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+      <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+      <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+    </svg>
+  </div>
+  <div class="wordmark">Dionysia</div>
+  <div class="tagline">One key to the whole room</div>
+
+  <div class="notice" id="notice"></div>
+
+  <div class="card">
+    <p class="eyebrow">Founding membership</p>
+    <p class="price-line"><b>$6</b> / month · cancel anytime</p>
+    <p class="perk-row">The full library — films, series &amp; worlds. No ads, no algorithm.</p>
+
+    <!-- New member: create account -->
+    <form id="signup-form" novalidate>
+      <label class="field-label" for="su-email">Email</label>
+      <input id="su-email" class="field" type="email" autocomplete="email" placeholder="you@yourcinema.com" required />
+      <label class="field-label" for="su-pass">Choose a password</label>
+      <input id="su-pass" class="field" type="password" autocomplete="new-password" placeholder="At least 6 characters" required />
+      <button class="btn" type="submit" id="su-btn">Create account &amp; continue <span>→</span></button>
+      <p class="fineprint">Next: secure card entry on Stripe</p>
+    </form>
+
+    <!-- Signed in, not yet paid -->
+    <div id="pay-view" style="display:none">
+      <p class="font-serif" style="font-size:18px;margin-bottom:1.1em">You’re signed in. One step left — complete your membership.</p>
+      <button class="btn" id="pay-btn">Continue to payment <span>→</span></button>
+      <p class="fineprint">Secure checkout by Stripe</p>
+    </div>
+
+    <!-- Already a member -->
+    <div id="member-view" style="display:none">
+      <p class="font-serif" style="font-size:19px;margin-bottom:1.1em">You’re already a member. Welcome back.</p>
+      <a class="btn" href="discover.html">Enter the theatre <span>→</span></a>
+    </div>
+
+    <!-- Memberships not open yet -->
+    <div id="soon-view" style="display:none">
+      <p class="font-serif" style="font-size:19px;line-height:1.3;margin-bottom:0.7em">Founding memberships open soon.</p>
+      <p style="color:var(--ink-mute);font-size:14px;margin-bottom:1.3em">Two films are free to watch right now — and we’ll email you the moment doors open.</p>
+      <a class="btn" href="index.html#films">Watch two films free <span>→</span></a>
+    </div>
+
+    <p class="msg" id="msg"></p>
+  </div>
+
+  <p class="alt" id="signin-alt">Already have an account? <a href="login.html">Sign in</a></p>
+  <p class="back"><a href="index.html">← Back to Dionysia</a></p>
+</div>
+
+<script>
+  const SB_URL  = "https://zjdraojepoaajgwrstkj.supabase.co";
+  const SB_ANON = "sb_publishable_bCodjhel8DZq00LRRApvWA_xamIhN_F";
+  const sb = window.supabase.createClient(SB_URL, SB_ANON);
+  const $ = (id) => document.getElementById(id);
+  const setMsg = (t,k) => { $('msg').textContent = t || ''; $('msg').className = 'msg' + (k ? ' ' + k : ''); };
+  const MEMBERSHIPS_OPEN = false; // flip to true for the live paid launch
+  const show = (id) => { ['signup-form','pay-view','member-view','soon-view'].forEach(v => $(v).style.display = (v===id?'':'none')); };
+
+  const params = new URLSearchParams(location.search);
+  if (params.get('canceled') === '1') {
+    const n = $('notice'); n.style.display = 'block';
+    n.textContent = 'Checkout canceled — no charge was made. Whenever you’re ready, the door’s still open.';
+  }
+
+  // Decide which view to show based on session + membership.
+  (async () => {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        $('signin-alt').style.display = 'none';
+        const { data: ok } = await sb.rpc('has_access');
+        if (ok) { show('member-view'); return; }
+        if (!MEMBERSHIPS_OPEN) { show('soon-view'); return; }
+        show('pay-view');
+        $('pay-btn').addEventListener('click', startCheckout);
+        return;
+      }
+    } catch (_) {}
+    if (!MEMBERSHIPS_OPEN) { show('soon-view'); return; }
+    show('signup-form');
+  })();
+
+  // New member → create account (instant session) → straight to checkout.
+  $('signup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = ($('su-email').value || '').trim().toLowerCase();
+    const pass  = $('su-pass').value || '';
+    $('su-email').classList.remove('err'); $('su-pass').classList.remove('err'); setMsg('');
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('su-email').classList.add('err'); return setMsg('That email doesn’t look right.', 'err'); }
+    if (pass.length < 6) { $('su-pass').classList.add('err'); return setMsg('Password must be at least 6 characters.', 'err'); }
+
+    const btn = $('su-btn'); btn.disabled = true; btn.textContent = 'Creating…';
+    try {
+      const { data, error } = await sb.auth.signUp({ email, password: pass });
+
+      if (error) {
+        // Account already exists → try signing them in with what they typed.
+        if (/already|registered|exists/i.test(error.message)) {
+          const { data: si, error: se } = await sb.auth.signInWithPassword({ email, password: pass });
+          if (se) { resetBtn(); return setMsg('An account already exists for this email. Wrong password? Use “Sign in”.', 'err'); }
+          if (si.session) return startCheckout();
+        }
+        resetBtn(); return setMsg(error.message || 'Could not create your account.', 'err');
+      }
+
+      if (data.session) { return startCheckout(); }            // confirm-email OFF → instant session
+      // Fallback if email confirmation is enabled on the project:
+      resetBtn();
+      setMsg('Account created — check your email to confirm, then sign in to finish.', 'ok');
+    } catch (err) {
+      resetBtn(); setMsg('Something went wrong. Please try again.', 'err');
+    }
+    function resetBtn(){ btn.disabled = false; btn.innerHTML = 'Create account &amp; continue <span>→</span>'; }
+  });
+
+  async function startCheckout(){
+    setMsg('Taking you to secure checkout…', 'ok');
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { show('signup-form'); return setMsg('Please create your account first.', 'err'); }
+    try {
+      const res = await fetch(`${SB_URL}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${session.access_token}`, 'apikey': SB_ANON, 'Content-Type': 'application/json' },
+        body: '{}'
+      });
+      const j = await res.json();
+      if (j.url) { location.href = j.url; return; }
+      if (j.error === 'already-member') { location.href = 'account.html'; return; }
+      setMsg('Could not start checkout. Please try again. (' + (j.error || res.status) + ')', 'err');
+    } catch (err) {
+      setMsg('Network error starting checkout. Please try again.', 'err');
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+[
+  {
+    "id": "hero-4",
+    "slug": "the-sea-that-dreamed",
+    "title": "The Sea That Dreamed",
+    "director": "Roxanne Ducharme",
+    "year": 2026,
+    "runtime": 2,
+    "format": "short",
+    "synopsis": "A quiet underwater fable about Wynn, a small axolotl-like creature who has always lived in the deep — in a monochromatic sea with no memories, no sky, and no shore. When he finds a jar of borrowed vision, the dreams of others become a way to imagine, and transform, the only world he has.",
+    "directorStatement": "I made the film as a small act of hope in a chaotic world, a visual poem shaped by thoughts of war, displacement, loss, and resilience. I wanted it to feel like a distant bedtime story, simple but not childish, as if it were being read from a worn-out book found in an attic.",
+    "productionNotes": {
+      "tools": "ChatGPT (story + narration), ElevenLabs (voice + soundscape), Suno (cello-based score), Epidemic Sound (soundscape), Midjourney (creature, environments, jar, visions), Runway References (scene composition), Photoshop (retouch + color balance), Runway Gen-4 (animation), Kling 2.5 + Veo 3 + Gemini 2.5 Flash / Nano Banana (updated festival version), Adobe Premiere Pro (edit + grade), Topaz Video (final upscale).",
+      "handAndMachine": "The machine helped generate the images, voices, movements, and variations. My hand was in the writing, the selection, the rejection, the pacing, the camera direction, the emotional tone, the sound, the edit, and the slow shaping of the film until the tools disappeared behind Wynn's journey."
+    },
+    "subtitles": [
+      { "lang": "en", "label": "English",  "src": "/assets/films/the-sea-that-dreamed/subtitles/en.srt" },
+      { "lang": "it", "label": "Italiano", "src": "/assets/films/the-sea-that-dreamed/subtitles/it.srt" },
+      { "lang": "es", "label": "Español",  "src": "/assets/films/the-sea-that-dreamed/subtitles/es.srt" }
+    ],
+    "supplementaryDocs": [
+      { "label": "Recipe",             "src": "/assets/films/the-sea-that-dreamed/recipe.pdf" },
+      { "label": "Production Journal", "src": "/assets/films/the-sea-that-dreamed/production-journal.pdf" }
+    ],
+    "laurels": [
+      "Best AI Film — Milan Indie Film Festival 2025",
+      "Best AI Film — Cine Vista Oasis Film Awards 2025",
+      "Best AI Film — KYOTO Cinematica Film Festival 2025",
+      "Silver Cloud Award — OMNI: International AI Film Festival, Sydney Australia 2025",
+      "Best AI Video — Chalachitra International Film Awards 2025",
+      "Best Animation Silver Award — Bali International AI Film Fest 2025",
+      "Best Animation — AI Film Awards Bali 2025",
+      "Best AI Animation Short — AI International Film Festival 2025",
+      "Honorable Mention — Reply AI Film Festival 2025",
+      "Best Animation — LAAIMPA AI Motion Pictures Awards, November 2025",
+      "+16 additional festival honors"
+    ],
+    "posterUrl": "/assets/films/the-sea-that-dreamed/poster.jpg",
+    "heroUrl": "/assets/films/the-sea-that-dreamed/hero.jpg",
+    "muxPlaybackId": "xxQQxxh6C5kJcTNFE1TRRVBJZP00qPz9qWD8oR15cFbE",
+    "credit": { "hand": "writing, pacing, edit", "machine": "image, voice, score" },
+    "free": true,
+    "status": "live"
+  },
+  {
+    "id": "hero-5",
+    "slug": "fossils",
+    "title": "FOSSiLS",
+    "director": "Roxanne Ducharme",
+    "year": 2026,
+    "runtime": 3,
+    "format": "short",
+    "synopsis": "A meditation on what remains of us after we are gone. In the rhythm of a poem rather than a plot, FOSSiLS holds two feelings at once — the melancholy of imagining humanity's end, and the quiet hope that something beautiful might still survive in the gestures, gaze, and stride of whatever comes next.",
+    "directorStatement": "FOSSiLS began from a desire to create something emotionally powerful and very different from my more whimsical work. The film holds two opposing feelings at once: the melancholy of imagining humanity's end, and the quiet hope that something beautiful might still remain. I wanted the end of the world to feel serene rather than hopeless, beautiful rather than brutal.",
+    "credits": {
+      "directed": "Roxanne Ducharme (TrashCanRoxanne) — direction, edit, AI visuals",
+      "writtenBy": "Johanne Tremblay",
+      "narratedBy": "Kim Bubbs",
+      "music": "Daniel Scott — composed and performed",
+      "soundMix": "Roger Guerin — sound editing and re-recording mix"
+    },
+    "productionNotes": {
+      "tools": "Midjourney (visuals), Runway (animation, most scenes), Kling AI (additional scenes), ChatGPT (English translation from original French script, visual development research), Adobe Premiere (edit, color, titles, captions), Topaz AI (upscale).",
+      "handAndMachine": "Writing by Johanne Tremblay, narration by Kim Bubbs, music by Daniel Scott, sound mix by Roger Guerin — all human-made. AI tools generated and animated the imagery and supported the English translation. Direction, edit, color correction, titles, and captions — by Roxanne."
+    },
+    "subtitles": [
+      { "lang": "fr", "label": "Français", "src": "/assets/films/fossils/subtitles/fr.srt" },
+      { "lang": "en", "label": "English",  "src": "/assets/films/fossils/subtitles/en.srt" },
+      { "lang": "it", "label": "Italiano", "src": "/assets/films/fossils/subtitles/it.srt" }
+    ],
+    "laurels": [
+      "Official Selection — AI Short Film Festival LARISSA LUMINA 2024",
+      "Official Competition — ARTEFACT AI Film Festival 2024",
+      "Semi-Finalist — Atlanta International AI Film Festival 2025",
+      "Official Selection — BAIFF, Burano Artificial Intelligence Film Festival 2025",
+      "Finalist — Reel Intelligence 2025",
+      "Highly Commended — AIFA Awards 2025",
+      "Award Winner — The Seattle AI Film Festival 2025",
+      "Award Winner — Tokyo Film & Screenplay Awards 2025"
+    ],
+    "posterUrl": "/assets/films/fossils/poster.jpg",
+    "heroUrl": "/assets/films/fossils/hero.jpg",
+    "muxPlaybackId": "HdzAOOZPQmlGgo00KqCcAFrNXOSody4LixJZRMqVH89o",
+    "credit": { "hand": "writing, voice, music, sound, edit", "machine": "image, motion" },
+    "status": "live"
+  },
+  {
+    "id": "hero-1",
+    "slug": "hope-episode-1",
+    "title": "Hope — Episode 1",
+    "director": "Brice Weber",
+    "year": 2026,
+    "runtime": 3,
+    "format": "series",
+    "synopsis": "A man finds himself swallowed by the water, trapped in the depths, suspended between consciousness and survival. He drifts in an abyssal silence where time stands still, and where his future and his life hang in the balance.",
+    "productionNotes": {
+      "tools": "Entirely on Flora.",
+      "handAndMachine": "The script, the storyboard, the editing, the color grading, and the sound mixing were entirely done by me. AI only helped me to generate and animate the images."
+    },
+    "laurels": [
+      "Best AI Film — Cine Paris Film Festival 2026"
+    ],
+    "posterUrl": "/assets/films/hope-episode-1/poster.png",
+    "heroUrl": "/assets/films/hope-episode-1/hero.png",
+    "muxPlaybackId": "b3zEdPL00thHg24DPamBbBnqjqpb01xwZJmlsNN02eqL01M",
+    "credit": { "hand": "script, edit, grade", "machine": "image, motion" },
+    "status": "live"
+  },
+  {
+    "id": "hope-episode-2",
+    "slug": "hope-episode-2",
+    "title": "Hope — Episode 2",
+    "director": "Brice Weber",
+    "year": 2026,
+    "format": "series",
+    "synopsis": "",
+    "productionNotes": {
+      "tools": "Entirely on Flora.",
+      "handAndMachine": "The script, the storyboard, the editing, the color grading, and the sound mixing were entirely done by me. AI only helped me to generate and animate the images."
+    },
+    "posterUrl": "/assets/films/hope-episode-2/poster.jpg",
+    "heroUrl": "/assets/films/hope-episode-2/hero.jpg",
+    "muxPlaybackId": "RkH6LSZb3yRcJOSZeb01ljs716AQnNXMVkvxs3TmyqSM",
+    "credit": { "hand": "script, edit, grade", "machine": "image, motion" },
+    "status": "live"
+  },
+  {
+    "id": "hero-2",
+    "slug": "the-great-battle",
+    "title": "The Great Battle",
+    "director": "Andre Surya",
+    "year": 2025,
+    "runtime": 3,
+    "format": "short",
+    "synopsis": "In the shadow of an ancient castle, a weary General warns the King of an impending Orc invasion, led by a fearsome Orc King. As the kingdom braces for war, the Black Dragon — long slumbering beneath the earth — rises to defend the realm. The dragon battles the Orc Titan in a fierce clash of titans, but is struck down. Yet, from the depths of death, the dragon awakens once more. With a roar that shakes the heavens, it unleashes a torrent of blue flame, annihilating the Orc armies and turning the tide of war, securing the kingdom's future in a blaze of fury.",
+    "productionNotes": {
+      "tools": "Kling AI, Sora 2, Suno, ElevenLabs, Seedream.",
+      "handAndMachine": "Direction, narrative, and editing — by Andre. AI tools generated and animated the imagery."
+    },
+    "laurels": [
+      "Winner — London Vision Film Festival",
+      "Best Microfilm — Touchstone Independent Film Festival, October 2025",
+      "Award Winner — Portugal Indie Film Festival 2025",
+      "Award of Merit — The IndieFEST Film Awards 2025",
+      "Finalist — NYIFA / New York International Film Awards",
+      "Official Selection — Cinema Royale: Paris Edition 2025",
+      "Official Selection — Swedish International Film Festival 2025"
+    ],
+    "posterUrl": "/assets/films/the-great-battle/poster.jpg",
+    "heroUrl": "/assets/films/the-great-battle/hero.png",
+    "muxPlaybackId": "9Uuc01UswXpXBjfjL3YMH01PpGLMWrN01I9u01YbbK3kma4",
+    "credit": { "hand": "direction, edit", "machine": "image, motion, voice" },
+    "free": true,
+    "status": "live"
+  },
+  {
+    "id": "hero-3",
+    "slug": "earths-future",
+    "title": "Earth's Future?",
+    "tagline": "What Kind of Earth Are We Leaving for Future Generations?",
+    "director": "Andre Surya",
+    "year": 2025,
+    "runtime": 2,
+    "format": "short",
+    "synopsis": "A 3D animated AI piece intended as a proof of concept — an attempt to create a continuous, frame-by-frame 3D animated short using AI, exploring what the future holds for full-feature AI-generated 3D animated cinema. The film itself carries a question: what kind of Earth are we leaving for future generations?",
+    "productionNotes": {
+      "tools": "Kling AI, Seedream, Suno, ElevenLabs, Nano Banana, Veo 3.",
+      "handAndMachine": "Direction, narrative, 3D-animation continuity design, and editing — by Andre. AI tools generated and animated the imagery."
+    },
+    "laurels": [
+      "Official Selection — CinemaBriz Film Festival 2025, Spain",
+      "Award of Merit — The IndieFEST Film Awards 2025",
+      "Official Selection — Cinema Royale: Paris Edition 2025"
+    ],
+    "posterUrl": "/assets/films/earths-future/poster.jpg",
+    "heroUrl": "/assets/films/earths-future/hero.png",
+    "muxPlaybackId": "Y8xkkRMTkAZsihCOO5EwCf01Onf9B4ur5yBcdbihbDMQ",
+    "credit": { "hand": "direction, 3D continuity", "machine": "image, motion" },
+    "status": "live"
+  },
+  {
+    "id": "tba-1",
+    "slug": "tba-1",
+    "title": "Coming Soon",
+    "director": "—",
+    "year": 2026,
+    "format": "feature",
+    "synopsis": "",
+    "posterUrl": null,
+    "heroUrl": null,
+    "muxPlaybackId": null,
+    "status": "coming"
+  },
+  {
+    "id": "naia",
+    "slug": "naia",
+    "title": "NAIÁ",
+    "director": "Anderson Freitas",
+    "year": 2026,
+    "runtime": 6,
+    "format": "short",
+    "synopsis": "",
+    "directorStatement": "",
+    "posterUrl": "/assets/films/naia/poster.jpg",
+    "heroUrl": "/assets/films/naia/hero.jpg",
+    "muxPlaybackId": "gxr1ZvelPR4MJf5mc01JZCreD88s4MdgSPZWsvqYIQSQ",
+    "status": "live"
+  },
+  {
+    "id": "tba-3",
+    "slug": "tba-3",
+    "title": "Coming Soon",
+    "director": "—",
+    "year": 2026,
+    "format": "series",
+    "synopsis": "",
+    "posterUrl": null,
+    "heroUrl": null,
+    "muxPlaybackId": null,
+    "status": "coming"
+  },
+  {
+    "id": "life-swing-again",
+    "slug": "life-swing-again",
+    "title": "Life, Swing, Again",
+    "director": "Hyung-rae Cho",
+    "year": 2026,
+    "runtime": 11,
+    "format": "short",
+    "synopsis": "",
+    "directorStatement": "",
+    "posterUrl": "/assets/films/life-swing-again/poster.jpg",
+    "heroUrl": "/assets/films/life-swing-again/hero.jpg",
+    "muxPlaybackId": "OUvIHXC01ooLlMQR0000801H7yJqwqghh00STLWxUI1RkPC8",
+    "status": "live"
+  }
+]
