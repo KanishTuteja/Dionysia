@@ -86,20 +86,17 @@
 
       if (!session) { fail('Link may have expired.'); return; }
 
-      // Optional close-circle gate: check allowed_emails table.
-      // Comment out the next block to allow anyone with an email to sign in.
-      const userEmail = (session.user.email || '').toLowerCase();
-      const { data: allowed, error: allowedErr } = await sb
-        .from('allowed_emails')
-        .select('email')
-        .eq('email', userEmail)
-        .maybeSingle();
+      // Access gate: founders (allowlist) OR active members — resolved by has_access().
+      // SECURITY DEFINER, so it works regardless of table RLS.
+      let hasAccess = false;
+      try {
+        const { data: ok, error: rpcErr } = await sb.rpc('has_access');
+        if (rpcErr) { console.warn('has_access check failed, allowing in:', rpcErr.message); hasAccess = true; } // fail open on infra error, gate.js re-checks
+        else hasAccess = !!ok;
+      } catch (e) { console.warn('has_access exception, allowing in:', e); hasAccess = true; }
 
-      if (allowedErr) {
-        // RLS or table missing — fail open for now (allow the user in)
-        console.warn('allowed_emails check failed:', allowedErr.message);
-      } else if (!allowed) {
-        // Not on the list. Sign them out and show a polite gate.
+      if (!hasAccess) {
+        // Signed in but not a founder or member. Sign out + a polite gate.
         await sb.auth.signOut();
         status.innerHTML = '<span style="font-style:italic">"By introduction only."</span>';
         small.innerHTML = 'This email isn’t on the founding list yet. <br><br>If a curator referred you, <a href="mailto:kanishtuteja@gmail.com?subject=DIONYSIA%20%E2%80%94%20Founding%20list%20request">reach out</a>.';

@@ -112,6 +112,27 @@
   .film-meta { font-size:12px; color:#a99c8c; margin-top:0.2rem; letter-spacing:0.02em; }
   .film-award { font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(201,163,90,0.85); margin-top:0.45rem; }
 
+  /* ---------- Founding Circle ---------- */
+  .founding-grid { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:1rem; }
+  .founding-card { position:relative; min-height:280px; border-radius:6px; overflow:hidden; cursor:pointer;
+    border:1px solid rgba(196,168,104,0.22); background-color:#140d0d; background-size:cover; background-position:center;
+    box-shadow:0 22px 50px -30px rgba(0,0,0,0.85);
+    transition:transform .5s cubic-bezier(.2,.6,.2,1), border-color .5s, box-shadow .5s; }
+  .founding-card::before { content:""; position:absolute; inset:0; transition:background .5s;
+    background:linear-gradient(180deg, rgba(10,7,7,0.45) 0%, rgba(10,7,7,0.80) 52%, rgba(10,7,7,0.94) 100%); }
+  .founding-card:hover { transform:translateY(-5px); border-color:rgba(196,168,104,0.6); box-shadow:0 34px 66px -30px rgba(0,0,0,0.9); }
+  .founding-card:hover::before { background:linear-gradient(180deg, rgba(10,7,7,0.34) 0%, rgba(10,7,7,0.74) 52%, rgba(10,7,7,0.93) 100%); }
+  .founding-inner { position:absolute; inset:0; z-index:1; display:flex; flex-direction:column; justify-content:flex-end; padding:1.15rem 1.05rem 1.25rem; }
+  .founding-name { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:22px; line-height:1.05; color:#f0e8d4; }
+  .founding-name::after { content:""; display:block; width:26px; height:2px; margin-top:0.5rem; background:#7a1f2e; border-radius:1px; }
+  .founding-films { margin-top:0.6rem; font-size:11.5px; line-height:1.45; letter-spacing:0.01em; color:#c4a868; }
+  .founding-quote { margin-top:0.7rem; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13.5px; line-height:1.45; color:rgba(240,232,212,0.9); }
+  @media (max-width: 900px){ .founding-grid { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 560px){
+    .founding-grid { display:flex; grid-template-columns:none; overflow-x:auto; scroll-snap-type:x mandatory; gap:0.85rem; margin:0 -1.5rem; padding:0 1.5rem 0.5rem; -webkit-overflow-scrolling:touch; }
+    .founding-card { flex:0 0 78%; scroll-snap-align:start; min-height:250px; }
+  }
+
   /* ---------- Pricing ---------- */
   .price-card { position:relative; border:1px solid rgba(201,163,90,0.3); border-radius:6px; padding:2.6rem 2.2rem; background:linear-gradient(180deg, rgba(30,20,18,0.55), rgba(15,10,10,0.55)); box-shadow:0 40px 90px -50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(243,234,221,0.04); overflow:hidden; }
   .price-card::before { content:""; position:absolute; inset:0; background:radial-gradient(70% 50% at 50% 0%, rgba(201,163,90,0.10), transparent 60%); pointer-events:none; }
@@ -262,6 +283,20 @@
       <!-- film cards injected from films.json -->
       <p class="text-ink-dim col-span-full font-serif italic text-lg">Loading the programme…</p>
     </div>
+  </div>
+</section>
+
+<div class="rule max-w-6xl mx-auto"></div>
+
+<!-- ============== THE FOUNDING CIRCLE ============== -->
+<section id="founding" class="relative py-28 md:py-40 px-6 md:px-10" style="display:none">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal mb-12 md:mb-16 max-w-2xl">
+      <div class="eyebrow mb-5"><span class="sec-label">The Founding Circle</span></div>
+      <h2 class="display text-4xl md:text-6xl leading-[0.98]">Every frame credited — <em class="title-accent">hand and machine</em>.</h2>
+      <p id="founding-sub" class="mt-5 text-ink-mute max-w-md">The artists behind what's screening.</p>
+    </div>
+    <div id="founding-grid" class="founding-grid reveal" style="--rd:120ms"></div>
   </div>
 </section>
 
@@ -526,6 +561,79 @@
   // Kick off
   document.addEventListener('DOMContentLoaded', renderFilms);
   if (document.readyState !== 'loading') renderFilms();
+
+  // ---------- Founding Circle (additive; artists derived from films.json) ----------
+  function foundingFirstSentence(t){
+    const s = String(t || '').trim();
+    const m = s.match(/^[\s\S]*?[.!?](?=\s|$)/);
+    return (m ? m[0] : s).trim();
+  }
+  function foundingCard(a){
+    const titles = a.films.map(f => esc(f.title) + (f.year ? ` (${esc(String(f.year))})` : '')).join(' · ');
+    const quote  = a.statement ? foundingFirstSentence(a.statement) : '';
+    const target = a.films[0] ? a.films[0].title : '';
+    const bg     = a.poster ? ` style="background-image:url('${esc(a.poster)}')"` : '';
+    return `
+      <article class="founding-card" data-film-title="${esc(target)}"${bg}>
+        <div class="founding-inner">
+          <h3 class="founding-name">${esc(a.name)}</h3>
+          <p class="founding-films">${titles}</p>
+          ${quote ? `<p class="founding-quote">“${esc(quote)}”</p>` : ''}
+        </div>
+      </article>`;
+  }
+  async function renderFounding(){
+    const section = document.getElementById('founding');
+    const grid = document.getElementById('founding-grid');
+    if (!section || !grid) return;
+    try {
+      if (!window.dionysia) throw new Error('films loader unavailable');
+      const all = await window.dionysia.getFilms();
+      const films = (Array.isArray(all) ? all : []).filter(f => f && f.status !== 'coming' && f.director && f.director !== '—');
+      if (!films.length) throw new Error('no eligible films');
+      const artists = new Map();
+      for (const f of films){
+        if (!artists.has(f.director)) artists.set(f.director, { name:f.director, films:[], statement:'', poster:'' });
+        const a = artists.get(f.director);
+        a.films.push(f);
+        if (!a.statement && f.directorStatement && f.directorStatement.trim()) a.statement = f.directorStatement.trim();
+        if (!a.poster && f.posterUrl) a.poster = f.posterUrl;
+      }
+      const list = [...artists.values()];
+      if (!list.length) throw new Error('no artists');
+      grid.innerHTML = list.map(foundingCard).join('');
+      const sub = document.getElementById('founding-sub');
+      if (sub) sub.textContent = `${films.length} films · ${list.length} artists`;
+      section.style.display = '';
+      observeReveals();
+    } catch (err) {
+      section.style.display = 'none';
+    }
+  }
+  // Founding card → scroll to that artist's first film in the grid above
+  (function(){
+    const fg = document.getElementById('founding-grid');
+    if (!fg) return;
+    fg.addEventListener('click', (e)=>{
+      const card = e.target.closest('.founding-card'); if (!card) return;
+      const title = (card.getAttribute('data-film-title') || '').trim(); if (!title) return;
+      const grid = document.getElementById('film-grid');
+      const targetCard = grid ? [...grid.querySelectorAll('.film-card')].find(c => {
+        const h = c.querySelector('.film-title'); return h && h.textContent.trim() === title;
+      }) : null;
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior:'smooth', block:'center' });
+        const poster = targetCard.querySelector('.poster') || targetCard;
+        poster.style.transition = 'box-shadow .45s';
+        poster.style.boxShadow = '0 0 0 2px #c4a868';
+        setTimeout(()=>{ poster.style.boxShadow = ''; }, 1500);
+      } else {
+        const f = document.getElementById('films'); if (f) f.scrollIntoView({ behavior:'smooth', block:'start' });
+      }
+    });
+  })();
+  document.addEventListener('DOMContentLoaded', renderFounding);
+  if (document.readyState !== 'loading') renderFounding();
 </script>
 
 </body>

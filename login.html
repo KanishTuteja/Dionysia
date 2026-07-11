@@ -190,16 +190,16 @@
 
   <div class="panel">
     <div class="eyebrow" id="eyebrow">Sign in</div>
-    <div class="prompt">Welcome back. Sign in to your membership.</div>
+    <div class="prompt">Enter your email — we'll send you a one-time sign-in link.</div>
 
     <form class="form" id="loginForm" novalidate>
       <input class="field" type="email" id="email" name="email" placeholder="you@yourcinema.com" autocomplete="email" required aria-label="Your email address" />
-      <input class="field" type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password" aria-label="Your password" />
-      <button class="submit" type="submit" id="submit">Sign in</button>
+      <input class="field" type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password" aria-label="Your password" style="display:none" />
+      <button class="submit" type="submit" id="submit">Send my link</button>
     </form>
 
     <p style="margin-top:1.3em;text-align:center;font-size:12px;letter-spacing:0.02em;">
-      <a href="#" id="magic-toggle" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,163,90,0.3);">Email me a sign-in link instead</a>
+      <a href="#" id="magic-toggle" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,163,90,0.3);">Sign in with a password instead</a>
     </p>
 
     <div class="msg" id="msg"></div>
@@ -253,9 +253,9 @@
 
   const password = $('password');
   const magicToggle = $('magic-toggle');
-  let magicMode = false;
+  let magicMode = true;  // default to the magic link — founders (allowlist) have no password
 
-  // Toggle to magic-link sign-in — fallback for founding members who never set a password.
+  // Toggle between magic-link (default) and password sign-in.
   magicToggle.addEventListener('click', (e) => {
     e.preventDefault();
     magicMode = !magicMode;
@@ -263,12 +263,12 @@
     if (magicMode) {
       password.style.display = 'none';
       submit.textContent = 'Send my link';
-      document.querySelector('.prompt').textContent = "We'll email you a one-time sign-in link.";
-      magicToggle.textContent = 'Use a password instead';
+      document.querySelector('.prompt').textContent = "Enter your email — we'll send you a one-time sign-in link.";
+      magicToggle.textContent = 'Sign in with a password instead';
     } else {
       password.style.display = '';
       submit.textContent = 'Sign in';
-      document.querySelector('.prompt').textContent = 'Welcome back. Sign in to your membership.';
+      document.querySelector('.prompt').textContent = 'Enter your email and password to sign in.';
       magicToggle.textContent = 'Email me a sign-in link instead';
     }
   });
@@ -287,7 +287,7 @@
     if (magicMode) {
       submit.disabled = true; submit.textContent = 'Sending…';
       try {
-        const { error } = await sb.auth.signInWithOtp({ email: value, options: { emailRedirectTo: REDIRECT_TO, shouldCreateUser: false } });
+        const { error } = await sb.auth.signInWithOtp({ email: value, options: { emailRedirectTo: REDIRECT_TO, shouldCreateUser: true } });
         if (error) throw error;
         $('sent-email').textContent = value;
         stage.classList.add('sent');
