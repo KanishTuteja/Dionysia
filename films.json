@@ -233,5 +233,21 @@
     "heroUrl": "/assets/films/life-swing-again/hero.jpg",
     "muxPlaybackId": "OUvIHXC01ooLlMQR0000801H7yJqwqghh00STLWxUI1RkPC8",
     "status": "live"
+  },
+  {
+    "id": "the-patient",
+    "slug": "the-patient",
+    "title": "The Patient",
+    "director": "Luc Leclerc",
+    "year": 2026,
+    "format": "short",
+    "synopsis": "",
+    "productionNotes": {
+      "tools": "",
+      "handAndMachine": "An Above The Void production. Written and directed by Luc Leclerc — fictitious characters crafted with artificial intelligence, shaped by human intent and artistic vision."
+    },
+    "posterUrl": "/assets/films/the-patient/poster.jpg",
+    "muxPlaybackId": "Ic1Nn7guI2001tOEFP7V02Cu1Fvx8js02ud02k9J4Nm2JYY",
+    "status": "live"
   }
 ]
