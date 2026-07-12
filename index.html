@@ -485,7 +485,7 @@
   function openPlayer(id, title, director){
     if (!id) return;
     document.getElementById('player-holder').innerHTML =
-      `<mux-player playback-id="${esc(id)}" stream-type="on-demand" accent-color="#c9a35a" metadata-video-title="${esc(title)}" autoplay></mux-player>`;
+      `<mux-player playback-id="${esc(id)}" stream-type="on-demand" accent-color="#c9a35a" max-resolution="1080p" metadata-video-title="${esc(title)}" autoplay></mux-player>`;
     document.getElementById('pm-title').textContent = title || '';
     document.getElementById('pm-director').textContent = director || '';
     modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
