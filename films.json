@@ -248,6 +248,7 @@
     },
     "posterUrl": "/assets/films/the-patient/poster.jpg",
     "muxPlaybackId": "Ic1Nn7guI2001tOEFP7V02Cu1Fvx8js02ud02k9J4Nm2JYY",
+    "free": true,
     "status": "live"
   }
 ]
