@@ -1,6 +1,7 @@
 # Internal — keep off the public web deploy (no secrets in them, but no need to serve)
 supabase/
 MEMBERSHIP-SETUP.md
+tools/
 
 # Local dev
 .claude/
