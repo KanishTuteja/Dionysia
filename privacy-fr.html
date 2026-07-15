@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
+<title>Dionysia — Politique de confidentialité</title>
+<meta name="description" content="Comment Dionysia traite vos renseignements personnels." />
+<meta name="theme-color" content="#0a0707" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#0a0707;--ink:#f3eadd;--ink-mute:#a99c8c;--ink-dim:#6f6457;--gold:#c9a35a;--gold-soft:#e0c386;--wine:#6b1220;--wine-glow:#8b1a2b;--line:#1f1716}
+  html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+  body{padding:3.4em 1.4em 5em;position:relative;overflow-x:hidden;
+    background:
+      radial-gradient(ellipse 70% 40% at 50% 0%, rgba(201,163,90,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(107,18,32,0.10) 0%, transparent 70%),
+      var(--bg);}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:0.05;mix-blend-mode:overlay;z-index:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");}
+  .doc{position:relative;z-index:1;max-width:720px;margin:0 auto}
+  .masthead{text-align:center;margin-bottom:3em}
+  .logo{display:flex;justify-content:center;margin-bottom:1em}
+  .logo svg{width:44px;height:44px}
+  .wordmark{font-family:'Cormorant Garamond',serif;font-weight:500;text-transform:uppercase;font-size:clamp(24px,6vw,32px);letter-spacing:0.2em;padding-left:0.2em}
+  .tagline{font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;color:var(--ink-dim);margin-top:0.5em}
+  .langswitch{margin-top:1.2em;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim)}
+  .langswitch a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,163,90,0.3);padding-bottom:1px}
+  .langswitch a:hover{color:var(--gold-soft)}
+  .langswitch .on{color:var(--ink);border:0}
+  .langswitch .sep{margin:0 0.7em;color:var(--ink-dim)}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(30px,7vw,44px);letter-spacing:0.01em;margin-bottom:0.25em;line-height:1.1}
+  .effective{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:2.6em}
+  .lede{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--ink-mute);line-height:1.5;margin-bottom:2.6em;padding-bottom:2.6em;border-bottom:1px solid var(--line)}
+  h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:23px;color:var(--ink);margin:2.4em 0 0.7em;letter-spacing:0.01em}
+  h2 .num{color:var(--gold);font-size:16px;margin-right:0.5em;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:0.1em}
+  p{font-size:15.5px;line-height:1.72;color:var(--ink-mute);margin-bottom:1.05em}
+  p strong{color:var(--ink);font-weight:500}
+  ul{margin:0 0 1.05em 1.2em}
+  li{font-size:15.5px;line-height:1.7;color:var(--ink-mute);margin-bottom:0.5em}
+  li strong{color:var(--ink);font-weight:500}
+  a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,163,90,0.3)}
+  a:hover{color:var(--gold-soft)}
+  table{width:100%;border-collapse:collapse;margin:0.6em 0 1.4em;font-size:14px}
+  th,td{text-align:left;padding:0.7em 0.8em;border:1px solid var(--line);vertical-align:top;color:var(--ink-mute);line-height:1.55}
+  th{color:var(--gold);font-weight:500;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;background:rgba(201,163,90,0.04)}
+  .foot{margin-top:3.6em;padding-top:2em;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:1.4em;justify-content:center;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase}
+  .foot a{color:var(--ink-dim);border-bottom:0}
+  .foot a:hover{color:var(--gold)}
+  ::selection{background:rgba(201,163,90,0.35);color:#fff}
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="masthead">
+    <div class="logo">
+      <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 275 L126 275 L76 183 Z" fill="#6b1220"/>
+        <path d="M160 92 L244 240 L76 240 Z" stroke="#c9a35a" stroke-width="10" fill="none" stroke-linejoin="miter"/>
+        <path d="M160 30 L290 275 L126 275 L76 183 Z" stroke="#f3eadd" stroke-width="12" fill="none" stroke-linejoin="miter"/>
+      </svg>
+    </div>
+    <div class="wordmark">Dionysia</div>
+    <div class="tagline">Une seule clé pour toute la salle</div>
+    <div class="langswitch"><a href="privacy.html">English</a><span class="sep">·</span><span class="on">Français</span></div>
+  </div>
+
+  <h1>Politique de confidentialité</h1>
+  <p class="effective">En vigueur le 14 juillet 2026</p>
+
+  <p class="lede">Nous recueillons le moins de renseignements possible et nous ne vendons pas vos données. Cette politique explique ce que nous détenons, pourquoi, qui nous aide à exploiter le Service et les droits que vous avez sur vos renseignements.</p>
+
+  <h2><span class="num">1</span>Responsable de vos données</h2>
+  <p>Dionysia est exploité par <strong>Kanish Tuteja</strong>, entreprise individuelle établie au Québec, Canada, qui est la personne responsable des renseignements personnels recueillis par l'intermédiaire de <a href="https://dionysia.ca">dionysia.ca</a>. Pour toute question ou demande relative à la vie privée, écrivez à <a href="mailto:privacy@dionysia.ca">privacy@dionysia.ca</a>.</p>
+
+  <h2><span class="num">2</span>Ce que nous recueillons</h2>
+  <ul>
+    <li><strong>Renseignements de compte</strong> — votre adresse courriel et votre mot de passe (conservé de façon sécurisée; nous ne le voyons jamais en clair).</li>
+    <li><strong>Renseignements d'abonnement et de paiement</strong> — l'état de votre abonnement et l'historique de facturation. Les paiements par carte vont directement à Stripe; nous recevons une confirmation et des renseignements limités (comme les quatre derniers chiffres et la marque de la carte) mais <strong>jamais votre numéro de carte complet</strong>.</li>
+    <li><strong>Renseignements d'utilisation</strong> — des statistiques de base et respectueuses de la vie privée sur l'utilisation du site (pages consultées, région générale, type d'appareil). Nous utilisons Plausible, qui n'emploie pas de témoins et ne vous suit pas d'un site à l'autre.</li>
+    <li><strong>Communications</strong> — les messages que vous nous envoyez et nos réponses.</li>
+    <li><strong>Renseignements de créateur</strong> — si vous êtes un créateur en vedette, les détails, titres, images et crédits que vous fournissez pour votre œuvre.</li>
+  </ul>
+  <p>Nous ne recueillons pas sciemment de renseignements sur les enfants de moins de 16 ans.</p>
+
+  <h2><span class="num">3</span>Pourquoi nous les utilisons</h2>
+  <p>Nous utilisons vos renseignements uniquement pour : créer et sécuriser votre compte; fournir le Service et diffuser le Contenu aux membres; traiter les paiements et gérer votre abonnement; vous répondre; comprendre et améliorer le Service; et respecter nos obligations légales. Nous nous fondons sur votre consentement et sur la nécessité d'exécuter notre entente avec vous. Vous pouvez retirer votre consentement en tout temps (voir vos droits ci-dessous), même si certains usages sont nécessaires au fonctionnement de votre compte.</p>
+
+  <h2><span class="num">4</span>Avec qui nous les partageons</h2>
+  <p>Nous ne vendons pas vos renseignements personnels et ne les partageons pas à des fins publicitaires. Nous faisons appel à un petit ensemble de fournisseurs de confiance pour exploiter Dionysia, et ne partageons que ce dont chacun a besoin pour accomplir sa tâche :</p>
+  <table>
+    <tr><th>Fournisseur</th><th>Rôle</th><th>Lieu</th></tr>
+    <tr><td>Stripe</td><td>Traitement des paiements et facturation des abonnements</td><td>É.-U. / mondial</td></tr>
+    <tr><td>Supabase</td><td>Authentification des comptes et base de données</td><td>Infonuagique</td></tr>
+    <tr><td>Mux</td><td>Hébergement et diffusion vidéo sécurisés</td><td>É.-U. / mondial</td></tr>
+    <tr><td>Vercel</td><td>Hébergement du site Web</td><td>É.-U. / mondial</td></tr>
+    <tr><td>Plausible</td><td>Statistiques agrégées, sans témoins</td><td>Union européenne</td></tr>
+  </table>
+  <p>Certains de ces fournisseurs traitent des données à l'extérieur du Québec et du Canada, notamment aux États-Unis et dans l'Union européenne. Lorsque des renseignements sont traités hors de la province, nous prenons des mesures raisonnables pour qu'ils bénéficient d'une protection comparable. Nous pouvons aussi divulguer des renseignements si la loi l'exige, ou pour protéger les droits et la sécurité du Service, de ses créateurs ou de ses membres.</p>
+
+  <h2><span class="num">5</span>Témoins et suivi</h2>
+  <p>Nous gardons cela simple. Nous utilisons des témoins essentiels et un stockage similaire nécessaires pour vous garder connecté et mémoriser des préférences de base. Nos statistiques (Plausible) <strong>n'utilisent pas</strong> de témoins de suivi et n'établissent pas de profil de vous. Nous n'employons aucun traceur publicitaire.</p>
+
+  <h2><span class="num">6</span>Durée de conservation</h2>
+  <p>Nous conservons les renseignements de votre compte et d'abonnement tant que votre compte est actif, et pendant une période raisonnable par la suite pour respecter les exigences légales, fiscales et comptables. Lorsque des renseignements ne sont plus nécessaires, nous les supprimons ou les anonymisons. Vous pouvez demander en tout temps la fermeture de votre compte et la suppression de vos données (voir ci-dessous).</p>
+
+  <h2><span class="num">7</span>Comment nous les protégeons</h2>
+  <p>Les mots de passe sont chiffrés, les paiements passent par des connexions sécurisées gérées par Stripe, et les films réservés aux membres sont diffusés au moyen de jetons de lecture signés et de courte durée, de sorte qu'ils ne peuvent être visionnés sans un abonnement actif. Aucun système n'est parfaitement sécurisé, mais nous prenons des mesures raisonnables pour protéger vos renseignements et vous aviserons, ainsi que les autorités concernées, en cas d'incident de confidentialité grave, comme la loi l'exige.</p>
+
+  <h2><span class="num">8</span>Vos droits</h2>
+  <p>En vertu de la <em>Loi sur la protection des renseignements personnels dans le secteur privé</em> du Québec (modernisée par la Loi 25) et de la <em>LPRPDE</em> du Canada, vous avez le droit de :</p>
+  <ul>
+    <li><strong>Accéder</strong> aux renseignements personnels que nous détenons à votre sujet;</li>
+    <li><strong>Corriger</strong> les renseignements inexacts ou incomplets;</li>
+    <li><strong>Retirer votre consentement</strong> à l'utilisation de vos renseignements;</li>
+    <li><strong>Supprimer</strong> votre compte et vos renseignements, sous réserve des documents que nous devons conserver par la loi;</li>
+    <li><strong>Portabilité</strong> — recevoir les renseignements informatisés que vous nous avez fournis dans un format technologique structuré et couramment utilisé;</li>
+    <li><strong>Porter plainte</strong> auprès de nous et, si vous n'êtes pas satisfait, auprès de la <em>Commission d'accès à l'information du Québec</em>.</li>
+  </ul>
+  <p>Pour exercer l'un de ces droits, écrivez à <a href="mailto:privacy@dionysia.ca">privacy@dionysia.ca</a>. Nous répondrons dans le délai prévu par la loi (généralement 30 jours) et pourrions devoir vérifier votre identité au préalable. La personne responsable de la protection des renseignements personnels chez Dionysia est l'Exploitant, joignable à cette adresse.</p>
+
+  <h2><span class="num">9</span>Modifications de cette politique</h2>
+  <p>Si nous mettons à jour cette politique, nous publierons la nouvelle version ici et modifierons la date d'entrée en vigueur ci-dessus. Si le changement est important, nous vous en informerons par courriel ou par un avis sur le site.</p>
+
+  <h2><span class="num">10</span>Nous joindre</h2>
+  <p>Questions ou demandes relatives à votre vie privée : <a href="mailto:privacy@dionysia.ca">privacy@dionysia.ca</a>. <span lang="en">An English version of this policy is available at privacy.html.</span></p>
+
+  <div class="foot">
+    <a href="index.html">← Dionysia</a>
+    <a href="terms-fr.html">Conditions</a>
+    <a href="refund-fr.html">Remboursement et annulation</a>
+    <a href="mailto:privacy@dionysia.ca">Nous joindre</a>
+  </div>
+</div>
+</body>
+</html>
