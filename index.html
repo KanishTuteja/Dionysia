@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'><rect width='320' height='320' rx='48' fill='%230a0707'/><path d='M30 275 L126 275 L76 183 Z' fill='%236b1220'/><path d='M160 92 L244 240 L76 240 Z' stroke='%23c9a35a' stroke-width='10' fill='none' stroke-linejoin='miter'/><path d='M160 30 L290 275 L126 275 L76 183 Z' stroke='%23f3eadd' stroke-width='12' fill='none' stroke-linejoin='miter'/></svg>" />
 <title>DIONYSIA — Curated AI cinema. Watch with attention.</title>
-<meta name="description" content="A curated streaming room for cinema made when AI meets craft. Hand-picked, award-winning films, series, and worlds. Three films free — membership $6/mo." />
+<meta name="description" content="A curated streaming room for cinema made when AI meets craft. Hand-picked, award-winning films, series, and worlds. Four films free — membership $6/mo." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -230,12 +230,12 @@
     </p>
 
     <div class="reveal mt-12 flex flex-wrap items-center gap-4" style="--rd:700ms">
-      <a href="#films" class="btn btn-primary">Watch 3 films free <span class="arrow">↓</span></a>
+      <a href="#films" class="btn btn-primary">Watch 4 films free <span class="arrow">↓</span></a>
       <a href="#join" class="btn btn-ghost">Membership opening soon <span class="arrow">→</span></a>
     </div>
 
     <p class="reveal mt-6 text-[12px] tracking-[0.18em] uppercase text-ink-dim" style="--rd:820ms">
-      Three films free now · Founding memberships open soon
+      Four films free now · Founding memberships open soon
     </p>
   </div>
 
@@ -275,7 +275,7 @@
         <h2 class="display text-4xl md:text-6xl">Now <em class="title-accent">screening</em>.</h2>
       </div>
       <p class="reveal text-ink-mute max-w-sm md:text-right" style="--rd:150ms">
-        Hand-picked, festival-honored work. <span class="text-gold-soft">Three films play free</span> — the rest open with membership.
+        Hand-picked, festival-honored work. <span class="text-gold-soft" data-free-count>Four films play free</span> — the rest open with membership.
       </p>
     </div>
 
@@ -338,7 +338,7 @@
         Watch everything Dionysia has — and everything we add — for one small monthly price. Founding members will lock the lowest price we'll ever offer.
       </p>
       <p class="text-ink-mute leading-relaxed max-w-md">
-        Memberships open soon. For now, <a href="#films" class="text-gold hover:text-gold-soft border-b border-gold/30">watch three films free</a> — and leave your email to be first in.
+        Memberships open soon. For now, <a href="#films" class="text-gold hover:text-gold-soft border-b border-gold/30">watch four films free</a> — and leave your email to be first in.
       </p>
     </div>
 
@@ -464,7 +464,7 @@
     const award = Array.isArray(f.laurels) && f.laurels.length > 0;
     const meta = [f.director, f.runtime ? f.runtime + ' min' : null].filter(Boolean).join(' · ');
     return `
-      <article class="film-card" data-free="${free}" data-playback="${esc(f.muxPlaybackId||'')}" data-title="${esc(f.title)}" data-director="${esc(f.director||'')}">
+      <article class="film-card" data-free="${free}" data-playback="${esc(f.muxPlaybackId||'')}" data-video="${esc(f.videoUrl||'')}" data-title="${esc(f.title)}" data-director="${esc(f.director||'')}">
         <div class="poster">
           ${f.posterUrl ? `<img src="${esc(f.posterUrl)}" alt="${esc(f.title)} poster" loading="lazy">` : `<div class="poster-blank"><svg width="40" height="40" viewBox="0 0 32 32" fill="none"><path d="M16 6 L27 25 L5 25 Z" stroke="#6f6457" stroke-width="1" fill="none"/></svg></div>`}
           <span class="badge ${free ? 'badge-free' : 'badge-lock'}">${free ? 'Free' : 'Members'}</span>
@@ -488,10 +488,13 @@
 
   // ---------- Player modal ----------
   const modal = document.getElementById('player-modal');
-  function openPlayer(id, title, director){
-    if (!id) return;
-    document.getElementById('player-holder').innerHTML =
-      `<mux-player playback-id="${esc(id)}" stream-type="on-demand" accent-color="#c9a35a" max-resolution="1080p" metadata-video-title="${esc(title)}" autoplay></mux-player>`;
+  // Dual-mode: films hosted on Cloudflare R2 carry a videoUrl and play through a
+  // native <video>; films on Mux keep using mux-player exactly as before.
+  function openPlayer(id, title, director, videoUrl){
+    if (!id && !videoUrl) return;
+    document.getElementById('player-holder').innerHTML = videoUrl
+      ? `<video src="${esc(videoUrl)}" controls autoplay playsinline preload="metadata" style="width:100%;height:100%;background:#000"></video>`
+      : `<mux-player playback-id="${esc(id)}" stream-type="on-demand" accent-color="#c9a35a" max-resolution="1080p" metadata-video-title="${esc(title)}" autoplay></mux-player>`;
     document.getElementById('pm-title').textContent = title || '';
     document.getElementById('pm-director').textContent = director || '';
     modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
@@ -510,8 +513,8 @@
   // Card clicks (delegated)
   document.getElementById('film-grid').addEventListener('click', (e)=>{
     const card = e.target.closest('.film-card'); if (!card) return;
-    if (card.dataset.free === 'true' && card.dataset.playback) {
-      openPlayer(card.dataset.playback, card.dataset.title, card.dataset.director);
+    if (card.dataset.free === 'true' && (card.dataset.playback || card.dataset.video)) {
+      openPlayer(card.dataset.playback, card.dataset.title, card.dataset.director, card.dataset.video);
     } else {
       document.getElementById('join').scrollIntoView({ behavior:'smooth' });
     }

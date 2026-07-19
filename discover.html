@@ -1285,7 +1285,10 @@
         // order below, where the portrait thumbnail fits correctly.
         slides = (all || []).filter(f =>
           f && f.status === 'live' &&
-          f.muxPlaybackId && !String(f.muxPlaybackId).startsWith('REPLACE_') &&
+          (
+            (f.videoUrl && String(f.videoUrl).trim()) ||
+            (f.muxPlaybackId && !String(f.muxPlaybackId).startsWith('REPLACE_'))
+          ) &&
           f.heroUrl
         );
         if (!slides.length) {

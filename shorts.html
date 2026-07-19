@@ -546,12 +546,15 @@
     wait(ready, async () => {
       try {
         const shorts = await window.dionysia.getFilmsByFormat('short');
-        // Hide TBA placeholders and entries with no real Mux ID
+        // Hide TBA placeholders and entries with no real source.
+        // A film is real if it has a Cloudflare R2 videoUrl OR a real Mux ID.
         const real = (shorts || []).filter(f =>
           f &&
           !String(f.id || '').startsWith('tba-') &&
-          f.muxPlaybackId &&
-          !String(f.muxPlaybackId).startsWith('REPLACE_')
+          (
+            (f.videoUrl && String(f.videoUrl).trim()) ||
+            (f.muxPlaybackId && !String(f.muxPlaybackId).startsWith('REPLACE_'))
+          )
         );
         if (!real.length) { if (empty) empty.style.display = ''; return; }
         grid.innerHTML = real.map(renderTile).join('');

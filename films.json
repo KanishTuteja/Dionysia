@@ -3,7 +3,7 @@
     "id": "by-means-unknown",
     "slug": "by-means-unknown",
     "title": "By Means Unknown",
-    "director": "REPLACE_DIRECTOR",
+    "director": "Luc Leclerc",
     "year": 2026,
     "runtime": 15,
     "format": "short",
@@ -13,10 +13,11 @@
       "handAndMachine": "Produced solo using a generative AI pipeline. Each frame built and refined from locked character and location references to hold continuity across hundreds of shots. Original Russian texts freshly translated; dialogue written new rather than adapted."
     },
     "posterUrl": "/assets/films/by-means-unknown/poster.jpg",
-    "heroUrl": "/assets/films/by-means-unknown/poster.jpg",
+    "heroUrl": null,
     "videoUrl": "https://pub-c86b6af6abde42c2a885b2d4600bb34e.r2.dev/by-means-unknown.mp4",
     "muxPlaybackId": null,
     "credit": { "hand": "direction, writing, edit", "machine": "image, motion" },
+    "free": true,
     "status": "live"
   },
   {
