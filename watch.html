@@ -150,6 +150,11 @@
     --media-accent-color:#c9a35a;
     --media-primary-color:#f3eadd;
   }
+  /* Native HTML5 player used for films served from Cloudflare R2 (free hosting) */
+  #player-native, video#player{
+    width:100%;height:100%;display:block;
+    object-fit:contain;background:#000;
+  }
 
   /* ============ META ============ */
   .meta{margin-top:3em;max-width:780px}
@@ -389,6 +394,17 @@
         playsinline
       ></mux-player>
 
+      <!-- Native player for films hosted on Cloudflare R2 (free). Hidden until
+           a film with a videoUrl is loaded; then it takes over the id="player". -->
+      <video
+        id="player-native"
+        playsinline
+        controls
+        controlslist="nodownload"
+        preload="metadata"
+        style="display:none"
+      ></video>
+
       <!-- Dionysia opening titles — Netflix-style, plays inside the frame -->
       <div id="bumper-overlay" class="bumper-in-player" aria-hidden="false">
         <iframe id="bumper-frame" title="Dionysia opening titles" allow="autoplay"></iframe>
@@ -576,7 +592,10 @@
 
         if (!film) { showState('notfound'); finishBumper(); return; }
 
-        if (film.status !== 'live' || !film.muxPlaybackId || film.muxPlaybackId.startsWith('REPLACE_')) {
+        // A film is playable if it has a Cloudflare R2 videoUrl OR a real Mux id.
+        const hasR2   = !!(film.videoUrl && String(film.videoUrl).trim());
+        const hasMux  = !!(film.muxPlaybackId && !String(film.muxPlaybackId).startsWith('REPLACE_'));
+        if (film.status !== 'live' || (!hasR2 && !hasMux)) {
           showState('coming');
           finishBumper(); // nothing to introduce
           return;
@@ -590,11 +609,26 @@
         $('synopsis').textContent = film.synopsis || '';
         document.title = 'Dionysia — ' + film.title;
 
-        // Configure Mux player
+        // ===== CHOOSE PLAYER: Cloudflare R2 (free, native video) or Mux =====
+        // If the film has a videoUrl we play it from R2 using the native <video>
+        // element, and hand that element the id="player" so every bit of code
+        // below (bumper, subtitles, signal panel, fullscreen) keeps working
+        // exactly the same. Films still on Mux are untouched.
+        if (hasR2) {
+          const muxEl = $('player');
+          if (muxEl) muxEl.remove();               // drop the Mux element
+          const vidEl = document.getElementById('player-native');
+          if (vidEl) { vidEl.id = 'player'; vidEl.style.display = 'block'; }
+        }
         const player = $('player');
-        player.setAttribute('playback-id', film.muxPlaybackId);
-        player.setAttribute('metadata-video-title', film.title);
-        player.setAttribute('metadata-video-id', film.id);
+
+        if (hasR2) {
+          player.src = film.videoUrl;              // native HTML5 source (R2)
+        } else {
+          player.setAttribute('playback-id', film.muxPlaybackId);
+          player.setAttribute('metadata-video-title', film.title);
+          player.setAttribute('metadata-video-id', film.id);
+        }
         // NOTE: we do NOT set autoplay here — the bumper plays first, then we
         // call .play() manually once the opening titles finish.
         if (film.heroUrl || film.posterUrl) {
@@ -693,7 +727,10 @@
         // "contain" (fit) for the small embedded player on the page.
         const syncFullscreenFit = () => {
           const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-          try { player.style.setProperty('--media-object-fit', fs ? 'cover' : 'contain'); } catch(_) {}
+          try {
+            if (hasR2) { player.style.objectFit = fs ? 'cover' : 'contain'; }
+            else { player.style.setProperty('--media-object-fit', fs ? 'cover' : 'contain'); }
+          } catch(_) {}
         };
         document.addEventListener('fullscreenchange', syncFullscreenFit);
         document.addEventListener('webkitfullscreenchange', syncFullscreenFit);

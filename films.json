@@ -1,5 +1,25 @@
 [
   {
+    "id": "by-means-unknown",
+    "slug": "by-means-unknown",
+    "title": "By Means Unknown",
+    "director": "REPLACE_DIRECTOR",
+    "year": 2026,
+    "runtime": 15,
+    "format": "short",
+    "synopsis": "A starving man drags a child's sled through the frozen ruins of Leningrad in the winter of 1942, guarding a battered suitcase with more care than his own life. A fiction drawn from the life and writings of Daniil Kharms, the Russian absurdist who starved to death during the Nazi siege, braiding his biography together with his own stories until the two can't be separated. A film about the one thing the regime could not kill: not the man, who died, but the work, which survived in a suitcase and outlived everyone who tried to erase it.",
+    "productionNotes": {
+      "tools": "DreamReel (locked character & location references, frame generation), Adobe Premiere (animation & assembly).",
+      "handAndMachine": "Produced solo using a generative AI pipeline. Each frame built and refined from locked character and location references to hold continuity across hundreds of shots. Original Russian texts freshly translated; dialogue written new rather than adapted."
+    },
+    "posterUrl": "/assets/films/by-means-unknown/poster.jpg",
+    "heroUrl": "/assets/films/by-means-unknown/poster.jpg",
+    "videoUrl": "https://pub-c86b6af6abde42c2a885b2d4600bb34e.r2.dev/by-means-unknown.mp4",
+    "muxPlaybackId": null,
+    "credit": { "hand": "direction, writing, edit", "machine": "image, motion" },
+    "status": "live"
+  },
+  {
     "id": "hero-4",
     "slug": "the-sea-that-dreamed",
     "title": "The Sea That Dreamed",

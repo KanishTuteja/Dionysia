@@ -8,3 +8,8 @@ tools/
 deploy-test.bat
 supabase-test.html
 *.jsx
+ 
+# Film masters / encodes - served from Cloudflare R2, never commit 
+By all means/ 
+*.mp4 
+*.part* 
