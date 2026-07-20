@@ -622,9 +622,58 @@
         }
         const player = $('player');
 
+        // ===== MEMBERS-ONLY AUTHORIZATION (films flagged "signed") =====
+        // A film with "signed": true in films.json is protected server-side:
+        //  • Mux films  → short-lived playback tokens from the mux-token fn
+        //  • R2 films   → short-lived presigned URL from the r2-sign fn
+        // Both functions verify has_access() before minting anything.
+        // Free films (no flag) skip this entirely and behave as before.
+        const FN_BASE = 'https://zjdraojepoaajgwrstkj.supabase.co/functions/v1';
+        const callAuthedFn = async (name, body) => {
+          const session = window.__dionysia_session;
+          if (!session) return null;
+          return fetch(FN_BASE + '/' + name, {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              'authorization': 'Bearer ' + session.access_token
+            },
+            body: JSON.stringify(body)
+          }).then(r => r.ok ? r.json() : null).catch(() => null);
+        };
+        const showAuthFailed = () => {
+          // Membership lapsed mid-session, or a transient backend error.
+          // Without authorization a protected stream cannot play, so explain
+          // instead of attaching a source that will just error.
+          finishBumper();
+          showState('loading');
+          const lt = document.querySelector('#state-loading .loading-text');
+          if (lt) lt.innerHTML =
+            'We couldn&rsquo;t authorize playback for your account.<br>' +
+            '<a href="membership.html" style="color:#c9a35a">Check your membership</a> ' +
+            'or refresh to try again.';
+          const sp = document.querySelector('#state-loading .spinner');
+          if (sp) sp.style.display = 'none';
+        };
+
         if (hasR2) {
-          player.src = film.videoUrl;              // native HTML5 source (R2)
+          let src = film.videoUrl;                 // native HTML5 source (R2)
+          if (film.signed) {
+            // Object key = the path part of videoUrl (bucket itself is private).
+            const key = new URL(film.videoUrl).pathname.replace(/^\//, '');
+            const res = await callAuthedFn('r2-sign', { key });
+            if (!res || !res.url) { showAuthFailed(); return; }
+            src = res.url;
+          }
+          player.src = src;
         } else {
+          if (film.signed) {
+            const tok = await callAuthedFn('mux-token', { playbackId: film.muxPlaybackId });
+            if (!tok || !tok.token) { showAuthFailed(); return; }
+            player.setAttribute('playback-token', tok.token);
+            if (tok.thumbnailToken)  player.setAttribute('thumbnail-token',  tok.thumbnailToken);
+            if (tok.storyboardToken) player.setAttribute('storyboard-token', tok.storyboardToken);
+          }
           player.setAttribute('playback-id', film.muxPlaybackId);
           player.setAttribute('metadata-video-title', film.title);
           player.setAttribute('metadata-video-id', film.id);
