@@ -191,9 +191,9 @@
         <a href="#join" class="hover:text-ink transition-colors">Membership</a>
         <a href="creators.html" class="hover:text-ink transition-colors">For Filmmakers</a>
       </div>
-      <div class="hidden md:flex items-center gap-7">
-        <a id="nav-signin" href="login.html" class="text-[12px] tracking-[0.2em] uppercase text-ink-mute hover:text-ink transition-colors">Sign in</a>
-        <a href="#join" class="text-[12px] tracking-[0.2em] uppercase text-gold hover:text-gold-soft transition-colors">Opening soon <span class="ml-1">→</span></a>
+      <div class="flex items-center gap-7">
+        <a href="#join" class="hidden md:inline text-[12px] tracking-[0.2em] uppercase text-gold hover:text-gold-soft transition-colors">Opening soon <span class="ml-1">→</span></a>
+        <a id="nav-signin" href="login.html" class="text-[12px] tracking-[0.2em] uppercase text-ink px-4 py-2 border border-white/25 rounded-[2px] hover:border-gold/60 hover:text-gold-soft transition-colors">Sign in</a>
       </div>
     </nav>
   </div>
@@ -234,7 +234,11 @@
       <a href="#join" class="btn btn-ghost">Membership opening soon <span class="arrow">→</span></a>
     </div>
 
-    <p class="reveal mt-6 text-[12px] tracking-[0.18em] uppercase text-ink-dim" style="--rd:820ms">
+    <p class="reveal mt-6 text-[15px] text-ink-mute" style="--rd:780ms">
+      Already have access? <a href="login.html" class="text-gold hover:text-gold-soft border-b border-gold/30">Sign in with your invited email</a> — no password needed, the full library unlocks.
+    </p>
+
+    <p class="reveal mt-5 text-[12px] tracking-[0.18em] uppercase text-ink-dim" style="--rd:860ms">
       Four films free now · Founding memberships open soon
     </p>
   </div>
@@ -340,6 +344,9 @@
       <p class="text-ink-mute leading-relaxed max-w-md">
         Memberships open soon. For now, <a href="#films" class="text-gold hover:text-gold-soft border-b border-gold/30">watch four films free</a> — and leave your email to be first in.
       </p>
+      <p class="mt-4 text-ink-mute leading-relaxed max-w-md">
+        Been given access already? <a href="login.html" class="text-gold hover:text-gold-soft border-b border-gold/30">Sign in</a> — everything is already unlocked for you.
+      </p>
     </div>
 
     <div class="price-card reveal" style="--rd:150ms">
@@ -422,6 +429,7 @@
     <div class="modal-cta">
       <p class="text-ink-mute font-serif italic mb-3">Enjoyed it? Founding memberships open soon.</p>
       <button class="btn btn-primary" onclick="closePlayer(); document.getElementById('join').scrollIntoView({behavior:'smooth'});">Join the waitlist <span class="arrow">→</span></button>
+      <p class="mt-4 text-[12px] tracking-[0.14em] uppercase text-ink-dim">Already have access? <a href="login.html" class="text-gold hover:text-gold-soft">Sign in</a></p>
     </div>
   </div>
 </div>
@@ -558,12 +566,12 @@
     });
   }
 
-  // If already signed in, soften the nav (Sign in -> Account)
+  // If already signed in, the nav button leads straight into the library.
   (async ()=>{
     if (!sb) return;
     try {
       const { data: { session } } = await sb.auth.getSession();
-      if (session) { const n = document.getElementById('nav-signin'); if (n){ n.textContent = 'Account'; n.href = 'account.html'; } }
+      if (session) { const n = document.getElementById('nav-signin'); if (n){ n.textContent = 'Enter the theatre'; n.href = 'discover.html'; } }
     } catch(_) {}
   })();
 

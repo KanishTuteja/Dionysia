@@ -144,6 +144,23 @@
     n.textContent = 'Checkout canceled — no charge was made. Whenever you’re ready, the door’s still open.';
   }
 
+  // Invitee signed in with a different email than their access was granted to:
+  // gate.js bounces them here with reason 'not-a-member'. Explain, don't stonewall.
+  (() => {
+    let reason = null;
+    try { reason = sessionStorage.getItem('__dionysia_gate_reason'); sessionStorage.removeItem('__dionysia_gate_reason'); } catch(_){}
+    if (reason !== 'not-a-member') return;
+    const n = $('notice'); n.style.display = 'block';
+    n.innerHTML = 'Signed in, but the room didn’t unlock? Invited access is tied to one exact email. ' +
+      '<a href="#" id="retry-signin" style="color:var(--gold)">Sign out and try the email your invitation was sent to</a>, ' +
+      'or <a href="mailto:kanishtuteja@gmail.com" style="color:var(--gold)">email us</a> and we’ll fix it.';
+    $('retry-signin').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { await sb.auth.signOut(); } catch(_){}
+      location.replace('login.html?invited=1');
+    });
+  })();
+
   // Decide which view to show based on session + membership.
   (async () => {
     try {

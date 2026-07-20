@@ -212,8 +212,9 @@
   </div>
 
   <div class="footnote">
+    Been given access? Use the exact email your invitation was sent to — no password needed.<br>
     New here? <a href="membership.html">Become a member</a> — $6/mo, cancel anytime.<br>
-    Founding filmmaker? <a href="mailto:kanishtuteja@gmail.com">Reach out</a>.
+    Founding filmmaker, or stuck? <a href="mailto:kanishtuteja@gmail.com">Reach out</a>.
   </div>
 
   <div class="closing">"The reel is hand-set, frame by frame."</div>
@@ -235,6 +236,21 @@
   const email  = $('email');
   const submit = $('submit');
   const msg    = $('msg');
+
+  // Shareable access links: login.html?invited=1&email=guest@example.com
+  // pre-fills the email and swaps the copy so invitees know they're expected.
+  (() => {
+    const qp = new URLSearchParams(location.search);
+    const qEmail = (qp.get('email') || '').trim().toLowerCase();
+    if (qEmail) email.value = qEmail;
+    if (qp.get('invited') === '1' || qEmail) {
+      $('eyebrow').textContent = 'Private access';
+      document.querySelector('.prompt').textContent = qEmail
+        ? 'Your access is ready. Press the button and we’ll email this address a one-time entry link — no password needed.'
+        : 'You’ve been given access. Enter the email your invitation was sent to and we’ll send a one-time entry link — no password needed.';
+      submit.textContent = 'Send my entry link';
+    }
+  })();
 
   // If already signed in, skip login → discover
   (async () => {
